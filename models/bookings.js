@@ -27,7 +27,7 @@ const bookingSchema = new schema({
         required : true,
         type : Date
     },
-    endDate : {
+    endDate : { 
         required : true,
         type : Date
     },
@@ -43,8 +43,7 @@ const bookingSchema = new schema({
     },
     reviewDate : {
         type : Date
-    }
-    ,
+    },
     status : {
         type : String
     }

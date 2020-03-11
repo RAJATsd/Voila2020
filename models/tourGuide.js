@@ -31,6 +31,9 @@ const tourGuideSchema = new schema({
         require:true,
         type:String
     },
+    experience :{
+        type: Array
+    },
     picUrl: {
         required:true,
         type:String
@@ -47,9 +50,9 @@ const tourGuideSchema = new schema({
         required:true,
         type:Array
     },
-    rating : {
-        type:Number
-    },
+    // rating : {
+    //     type:Number
+    // },
     city : {
         required : true,
         type : String
@@ -59,15 +62,15 @@ const tourGuideSchema = new schema({
         type : String
     }
     ,
-    noOfRating : {
-        type : Number
-    },
-    noOfGuiding : {
-        type:Number
-    },
+    // noOfRating : {
+    //     type : Number
+    // },
+    // noOfGuiding : {
+    //     type:Number
+    // },
     statusCurrent : {
-        type : Boolean,
-        default:false
+        type : String,
+        default:'pending'
     }
 });
 
