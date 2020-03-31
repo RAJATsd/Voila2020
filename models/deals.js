@@ -1,19 +1,39 @@
 const mongoose = require('mongoose');
 
-const schema = mongoose.schema;
+const schema = mongoose.Schema;
 
 const dealSchema = new schema({
     places : {
         type : Array
     },
     price : {
-        type : Number
+        type : Number,
+        required:true
     },
     guideId : {
-        type : Object
+        type : schema.Types.ObjectId,
+        required:true
     },
-    favourites : {
-        type : Array
+    daysOfGuiding : {
+        type: Number,
+        required:true
+    },
+    favorites : [{
+        favorite:{
+            type: schema.Types.ObjectId
+        }
+    }],
+    startDate : {
+        type : Date,
+        required:true
+    },
+    endDate : {
+        type: Date,
+        required:true
+    },
+    city : {
+        type : String,
+        required: true
     }
 });
 

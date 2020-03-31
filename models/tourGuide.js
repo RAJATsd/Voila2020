@@ -15,8 +15,13 @@ const tourGuideSchema = new schema({
         required : true,
         type : String
     },
+    rate : {
+        required:true,
+        type :Number
+    }
+    ,
     dob : {
-        require:true,
+        required:true,
         type : Date
     },
     phoneNumber : {
@@ -28,14 +33,13 @@ const tourGuideSchema = new schema({
         type:String
     },
     address : {
-        require:true,
+        required:true,
         type:String
     },
     experience :{
         type: Array
     },
     picUrl: {
-        required:true,
         type:String
     },
     aadhaarNumber : {
@@ -60,7 +64,12 @@ const tourGuideSchema = new schema({
     state : {
         required : true,
         type : String
-    }
+    },
+    tokens :[{
+        token : {
+            type:String
+        }
+    }] 
     ,
     // noOfRating : {
     //     type : Number
@@ -75,4 +84,4 @@ const tourGuideSchema = new schema({
 });
 
 
-exports.default = mongoose.model('tourGuide',tourGuideSchema);
+module.exports = mongoose.model('tourGuide',tourGuideSchema);

@@ -45,8 +45,13 @@ const touristSchema = new schema({
     statusCurrent : {
         type : Boolean,
         default:true
-    }
+    },
+    tokens : [{
+        token : {
+            type:String
+        }
+    }]
 });
 
 
-exports.default = mongoose.model('tourist',touristSchema);
+module.exports = mongoose.model('tourist',touristSchema);
