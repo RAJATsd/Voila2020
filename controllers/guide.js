@@ -1,5 +1,6 @@
 const dealModel = require('../models/deals');
 const bookingModel = require('../models/bookings');
+const updationMiddleware = require('../middleware/scheduleFunc');
 
 exports.addDeal = (req,res,next) => {
     const newDeal = new dealModel({
@@ -20,20 +21,21 @@ exports.addDeal = (req,res,next) => {
     });
 }
 
-exports.dealOffersList = (req,res,next) => {
-    bookingModel.find({guideId:req.user._id,status:'pending'})
-    .then(offers => {
-        res.status(302).json({message:"found these requests",offers:offers});
-    })
-    .catch(error=>{
-        console.log(error)
-    });
+exports.showDeal = async (req,res,next) => {
+    const deals = await dealModel.find({guideId:req.user._id});
+    res.status(200).json({message:"these are the deals",deals:deals});
 }
 
-exports.dealAccept = (req,res,next) => {
-    bookingModel.findOneAndUpdate({_id:req.params.bookingId},{status:'accepted'})
+exports.showOffers = (req,res,next) => {
+    const pendingBookings = bookingModel.find({guideId:req.user._id,status:'pending'});
+    res.status(200).json({message:"found these offers",offers:pendingBookings});
+}
+
+exports.bookingResponse = (req,res,next) => {
+    bookingModel.findOneAndUpdate({_id:req.params.bookingId},{status:req.params.response})
     .then(updatedBooking => {
         res.status(200).json({message:"booking updated",booking:updatedBooking});
+        updationMiddleware.changeBookingStatus;
     })
     .catch(error => {
         console.log(error);

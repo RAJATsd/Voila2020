@@ -1,6 +1,30 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const updationMiddleware = require('./middleware/scheduleFunc');
+const cron = require('cron');
+const path = require('path');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './uploads/profileImages/')
+    },
+    filename: function (req, file, cb) {
+
+        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+            var err = new Error();
+            err.code = 'filetype';
+            return cb(err);
+        }
+        else
+        {
+            cb(null,new Date().toISOString()+'_'+file.originalname);
+        }
+    }
+  });
+  
+multer({ storage: storage }).single('profilePic');
 
 
 const SERVER_PORT = process.env.PORT || 3000;
@@ -10,13 +34,42 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/voila';
 const app = express();
 
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname,'uploads')));
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './uploads/profileImages/')
+    },
+    filename: function (req, file, cb) {
+
+        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+            var err = new Error();
+            err.code = 'filetype';
+            return cb(err);
+        }
+        else
+        {
+            cb(null,new Date().toISOString()+'_'+file.originalname);
+        }
+    }
+  });
+  
+multer({ storage: storage }).single('profilePic');
+
+app.use(multer({ storage: storage }).single('profilePic'));
 app.use((req,res,next)=>{
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,PATCH');
     res.setHeader('Acess-Control-Allow-Headers','Content-Type,Authorization');
     next();
 });
+
+const cronJob = cron.CronJob;
+const job = new cronJob('1 0 * * *', () => {
+    updationMiddleware.changeBookingStatus;
+},null,true);
+
+job.start();
 
 app.get('/',(req,res,next)=>{
     res.send(JSON.stringify({Hello:"Baby, welcome to my world"}));

@@ -5,14 +5,14 @@ const schema = mongoose.Schema;
 const bookingSchema = new schema({
     guideId : {
         required:true,
-        type:Object
+        type:schema.Types.ObjectId
     },
     touristId : {
         required:true,
-        type:Object
+        type:schema.Types.ObjectId
     },
     bookingDate : {
-        required: true,
+        default: new Date().toJSON().slice(0,10),
         type:Date
     },
     price : {
@@ -45,7 +45,8 @@ const bookingSchema = new schema({
         type : Date
     },
     status : {
-        type : String
+        type : String,
+        default:'pending'
     }
 });
 

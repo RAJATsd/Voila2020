@@ -4,13 +4,19 @@ const jwt = require('jsonwebtoken');
 
 exports.postSignup = (req,res,next) => {
     const phoneNumber = req.body.phoneNumber;
+    const profilePic = req.file;
+    if(!profilePic)
+    {
+        return res.json({message:"no file uploaded"});
+    }
     Guide.findOne({phoneNumber:phoneNumber})
     .then(result => {
         if(result)
         {
-            res.json({message:"Giude Already Exist"});
+            res.json({message:"Guide Already Exist"});
         }
         else{
+            const picUrl = 'localhost://3000/images/'+profilePic.filename;
             const password = req.body.password;
             bcrypt.hash(password,12)
             .then(hashed=>{
@@ -23,6 +29,10 @@ exports.postSignup = (req,res,next) => {
                     email : req.body.email,
                     address : req.body.address,
                     experience : req.body.experience,
+                    peopleLimit : req.body.peopleLimit,
+                    perHeadCharge : req.body.perHeadCharge,
+                    perDayCharge : req.body.perDayCharge,
+                    picUrl : picUrl,
                     aadhaarNumber : req.body.aadhaarNumber,
                     interests : req.body.ginterests,
                     languages : req.body.languages,
@@ -82,8 +92,9 @@ exports.postLogin = async(req,res,next) => {
 }
 
 exports.getLogout = (req,res,next) => {
-    try {
-        res.user.tokens = req.user.tokens.filter((token)=>{
+    try 
+    {
+        req.user.tokens = req.user.tokens.filter((token)=>{
             return token.token != req.token;
         });
         await req.user.save();

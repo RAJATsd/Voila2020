@@ -2,11 +2,12 @@ const guideModel = require('../models/tourGuide');
 const dealsModel = require('../models/deals');
 const bookingsModel = require('../models/bookings');
 
+
 exports.getGuidesBySearch = async (req,res,next) => {
     const city = req.body.city;
     const startDate = req.body.startDate;
     const endDate = req.body.endDate;
-    
+    //noOfPeople            
     const guides = await guideModel.find({city:city});
     const deals = await dealsModel.find({endDate:{$gte:startDate}});
 
@@ -23,7 +24,7 @@ exports.getSelectGuide = async (req,res,next) => {
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         groupType : req.body.groupType,
-        status : 'accepted'
+        status : 'pending'
     });
     newBooking.save()
     .then(booking => {
@@ -46,13 +47,15 @@ exports.getDealAcceptance = async (req,res,next) => {
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         groupType : req.body.groupType,
-        status : 'pending'
+        status : 'placed'
     });
     newBooking.save()
     .then(booking=>{
         res.status(201).json({message : "Booking created successfully", booking:booking});
     })
-    .catch();
+    .catch(error => {
+        console.log(error);
+    });
 }
 
 exports.getSetAsFavorites = async (req,res,next) => {

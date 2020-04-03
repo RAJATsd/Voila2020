@@ -15,11 +15,6 @@ const tourGuideSchema = new schema({
         required : true,
         type : String
     },
-    rate : {
-        required:true,
-        type :Number
-    }
-    ,
     dob : {
         required:true,
         type : Date
@@ -36,9 +31,33 @@ const tourGuideSchema = new schema({
         required:true,
         type:String
     },
-    experience :{
-        type: Array
+    experience :[{
+        work : {
+            type: String
+        },
+        startYear : {
+            type: Number
+        },
+        duration : {
+            type : Number
+        },
+        profile : {
+            type : String
+        }
+    }],
+    peopleLimit : {
+        type: Number,
+        required: true
     },
+    perHeadCharge : {
+        type: Number,
+        required: true 
+    },
+    perDayCharge : {
+        type : Number,
+        required: true
+    }
+    ,
     picUrl: {
         type:String
     },
@@ -46,14 +65,18 @@ const tourGuideSchema = new schema({
         required:true,
         type:Number
     },
-    interests : {
-        required:true,
-        type :Array
-    },
-    languages : {
-        required:true,
-        type:Array
-    },
+    interests :[ {
+       interest : { 
+           required:true,
+           type :Array 
+        }
+    }],
+    languages :[{
+      language : { 
+          required:true,
+          type:Array
+        }
+    }] ,
     // rating : {
     //     type:Number
     // },
@@ -69,15 +92,18 @@ const tourGuideSchema = new schema({
         token : {
             type:String
         }
-    }] 
-    ,
+    }],
     // noOfRating : {
     //     type : Number
     // },
     // noOfGuiding : {
     //     type:Number
     // },
-    statusCurrent : {
+    occupied : {
+        type : Boolean,
+        default : false
+    },
+    profileStatus : {
         type : String,
         default:'pending'
     }
