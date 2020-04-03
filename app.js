@@ -5,6 +5,11 @@ const cron = require('cron');
 const path = require('path');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const adminRoutes = require('./routes/admin');
+const authGuideRoutes = require('./routes/authGuide');
+const authTouristRoutes = require('./routes/authTourist');
+const guideRoutes = require('./routes/guide');
+const touristRoutes = require('./routes/tourist');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -71,6 +76,11 @@ const job = new cronJob('1 0 * * *', () => {
 
 job.start();
 
+app.use(adminRoutes);
+app.use(authGuideRoutes);
+app.use(authTouristRoutes);
+app.use(guideRoutes);
+app.use(touristRoutes);
 app.get('/',(req,res,next)=>{
     res.send(JSON.stringify({Hello:"Baby, welcome to my world"}));
 });
