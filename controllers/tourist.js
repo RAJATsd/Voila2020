@@ -18,7 +18,6 @@ exports.getSelectGuide = async (req,res,next) => {
     const newBooking = new bookingsModel({
         guideId : req.params.guideId,
         touristId : req.user.touristId,
-        bookingDate : new Date(),
         price : req.body.price,
         noOfPeople : req.body.noOfPeople,
         startDate : req.body.startDate,
@@ -41,13 +40,12 @@ exports.getDealAcceptance = async (req,res,next) => {
     const newBooking = new bookingsModel({
         guideId : deal.guideId,
         touristId : req.user.touristId,
-        bookingDate : new Date(),
         price : deal.price,
         noOfPeople : req.body.noOfPeople,
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         groupType : req.body.groupType,
-        status : 'placed'
+        status : 'accepted'
     });
     newBooking.save()
     .then(booking=>{
