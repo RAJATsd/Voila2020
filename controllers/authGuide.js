@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.postSignup = (req,res,next) => {
-    const phoneNumber = req.body.phoneNumber;
+    const userData = JSON.parse(req.body.data);
+    const phoneNumber = userData.phoneNumber;
     const profilePic = req.file;
     if(!profilePic)
     {
@@ -16,28 +17,28 @@ exports.postSignup = (req,res,next) => {
             res.json({message:"Guide Already Exist"});
         }
         else{
-            const picUrl = 'localhost://3000/images/'+profilePic.filename;
-            const password = req.body.password;
-            bcrypt.hash(password,12)
+            const picUrl = 'localhost:3000/profileImages/'+profilePic.filename;
+            const password = userData.password;
+            bcrypt.hash(password,8)
             .then(hashed=>{
                 const newGuide = new Guide({
-                    name : req.body.name,
-                    gender : req.body.gender, 
+                    name : userData.name,
+                    gender : userData.gender, 
                     password : hashed,
-                    dob : req.body.dob,
+                    dob : userData.dob,
                     phoneNumber : phoneNumber,
-                    email : req.body.email,
-                    address : req.body.address,
-                    experience : req.body.experience,
-                    peopleLimit : req.body.peopleLimit,
-                    perHeadCharge : req.body.perHeadCharge,
-                    perDayCharge : req.body.perDayCharge,
+                    email : userData.email,
+                    address : userData.address,
+                    experience : userData.experience,
+                    peopleLimit : userData.peopleLimit,
+                    perHeadCharge : userData.perHeadCharge,
+                    perDayCharge : userData.perDayCharge,
                     picUrl : picUrl,
-                    aadhaarNumber : req.body.aadhaarNumber,
-                    interests : req.body.ginterests,
-                    languages : req.body.languages,
-                    city : req.body.city,
-                    state : req.body.state
+                    aadhaarNumber : userData.aadhaarNumber,
+                    interests : userData.interests,
+                    languages : userData.languages,
+                    city : userData.city,
+                    state : userData.state
                 });    
                 newGuide.save()
                 .then(result =>{
@@ -77,8 +78,13 @@ exports.postLogin = async(req,res,next) => {
                 else{
                     const token = jwt.sign({email:email,_id:guide._id.toString()},'thisismysecretkeyforthishackathon2020',{expiresIn:'5h'});
                     guide.tokens = guide.tokens.concat({token});
-                    await guide.save();
-                    res.status(200).json({message:"Person successfully logged in",token:token,guide:guide});
+                    guide.save()
+                    .then(saved => {
+                        res.status(200).json({message:"Person successfully logged in",token:token,guide:guide});
+                    })
+                    .catch(errorWhileSave => {
+                        console.log(errorWhileSave);
+                    });    
                 }
             })
             .catch(err=>{
@@ -91,7 +97,7 @@ exports.postLogin = async(req,res,next) => {
     });
 }
 
-exports.getLogout = (req,res,next) => {
+exports.getLogout = async (req,res,next) => {
     try 
     {
         req.user.tokens = req.user.tokens.filter((token)=>{
@@ -109,8 +115,13 @@ exports.getLogoutAll = (req,res,next) => {
     try
     {
         req.user.tokens.splice(0,req.user.tokens.length);
-        await req.user.save();
-        res.json({message:"logged out from all devices"});
+        req.user.save()
+        .then(saved => {
+            res.json({message:"logged out from all devices"});
+        })
+        .catch(errorWhileSave => {
+            console.log(errorWhileSave);
+        });
     }
     catch(error)
     {

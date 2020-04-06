@@ -11,8 +11,7 @@ exports.changeBookingStatus = async () =>
         console.log(updatedBookings);
         for(booking of updatedBookings)
         {
-            const updatedGuide = await guideModel.findOneAndUpdate({_id:booking.guideId},{occupied : true});
-            console.log(updatedGuide); 
+            guideModel.findOneAndUpdate({_id:booking.guideId},{occupied : true}); 
         }
     })
     .catch(error=>{

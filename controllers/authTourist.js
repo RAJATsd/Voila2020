@@ -63,8 +63,13 @@ exports.postLogin = async(req,res,next) => {
                 else{
                     const token = jwt.sign({email:email,_id:Tourist._id.toString()},'thisismysecretkeyforthishackathon2020',{expiresIn:'5h'});
                     Tourist.tokens = Tourist.tokens.concat({token});
-                    await Tourist.save();
-                    res.status(200).json({message:"Person successfully logged in",token:token,Tourist:Tourist});
+                    Tourist.save()
+                    .then(saved => {
+                        res.status(200).json({message:"Person successfully logged in",token:token,Tourist:Tourist});
+                    })
+                    .catch(errorWhileSave => {
+                        console.log(errorWhileSave);
+                    });
                 }
             })
             .catch(err=>{
@@ -77,7 +82,7 @@ exports.postLogin = async(req,res,next) => {
     });
 }
 
-exports.getLogout = (req,res,next) => {
+exports.getLogout = async (req,res,next) => {
     try {
         req.user.tokens = req.user.tokens.filter((token)=>{
             return token.token != req.token;
@@ -94,8 +99,13 @@ exports.getLogoutAll = (req,res,next) => {
     try
     {
         req.user.tokens.splice(0,req.user.tokens.length);
-        await req.user.save();
-        res.json({message:"logged out from all devices"});
+        req.user.save()
+        .then(saved => {
+            res.json({message:"Successfully logged out from all devices"});
+        })
+        .catch(errorWhileSave => {
+            console.log(errorWhileSave);
+        });
     }
     catch(error)
     {

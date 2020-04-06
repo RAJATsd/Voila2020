@@ -11,27 +11,6 @@ const authTouristRoutes = require('./routes/authTourist');
 const guideRoutes = require('./routes/guide');
 const touristRoutes = require('./routes/tourist');
 
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/profileImages/')
-    },
-    filename: function (req, file, cb) {
-
-        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
-            var err = new Error();
-            err.code = 'filetype';
-            return cb(err);
-        }
-        else
-        {
-            cb(null,new Date().toISOString()+'_'+file.originalname);
-        }
-    }
-  });
-  
-multer({ storage: storage }).single('profilePic');
-
-
 const SERVER_PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/voila';
 

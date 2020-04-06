@@ -18,11 +18,9 @@ const dealSchema = new schema({
         type: Number,
         required:true
     },
-    favorites : [{
-        favorite:{
-            type: schema.Types.ObjectId
-        }
-    }],
+    favorites : [
+        {type : schema.Types.ObjectId}
+    ] ,
     startDate : {
         type : Date,
         required:true

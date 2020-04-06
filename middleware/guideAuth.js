@@ -2,10 +2,13 @@ const jwt = require('jsonwebtoken');
 const Guide = require('../models/tourGuide');
 
 const auth = async (req,res,next) => {
-    const token = req.header('Authorization');
+    const token = req.header('Authorization');//.split(' ')[1];
+    
     const data = jwt.verify(token,'thisismysecretkeyforthishackathon2020');
+    console.log(data);
     try
     {
+        console.log("I am in");
         const user = await Guide.findOne({email:data.email,'tokens.token':token});
         if(!user)
         {

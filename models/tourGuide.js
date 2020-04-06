@@ -35,7 +35,7 @@ const tourGuideSchema = new schema({
         work : {
             type: String
         },
-        startYear : {
+        startYear :{
             type: Number
         },
         duration : {
@@ -56,8 +56,7 @@ const tourGuideSchema = new schema({
     perDayCharge : {
         type : Number,
         required: true
-    }
-    ,
+    },
     picUrl: {
         type:String
     },
@@ -65,18 +64,12 @@ const tourGuideSchema = new schema({
         required:true,
         type:Number
     },
-    interests :[ {
-       interest : { 
-           required:true,
-           type :Array 
-        }
+    interests :[{
+        type:String    
     }],
-    languages :[{
-      language : { 
-          required:true,
-          type:Array
-        }
-    }] ,
+    languages :[{    
+      type : String
+    }],
     // rating : {
     //     type:Number
     // },
