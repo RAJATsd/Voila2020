@@ -20,6 +20,13 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'uploads')));
 
+app.use((req,res,next)=>{
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,PATCH');
+    res.setHeader('Acess-Control-Allow-Headers','*');
+    next();
+});
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, './uploads/profileImages/')
@@ -39,14 +46,7 @@ var storage = multer.diskStorage({
   });
   
 multer({ storage: storage }).single('profilePic');
-
 app.use(multer({ storage: storage }).single('profilePic'));
-app.use((req,res,next)=>{
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,PATCH');
-    res.setHeader('Acess-Control-Allow-Headers','Content-Type,Authorization');
-    next();
-});
 
 const cronJob = cron.CronJob;
 const job = new cronJob('1 0 * * *', () => {
