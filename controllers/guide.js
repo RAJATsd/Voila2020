@@ -27,7 +27,7 @@ exports.showDeal = async (req,res,next) => {
 }
 
 exports.showOffers = (req,res,next) => {
-    const pendingBookings = bookingModel.find({guideId:req.user._id,status:'pending'});
+    const pendingBookings = bookingModel.find({guideId:req.user._id,status:'PENDING'});
     res.status(200).json({message:"found these offers",offers:pendingBookings});
 }
 
@@ -38,6 +38,16 @@ exports.bookingResponse = (req,res,next) => {
         updationMiddleware.changeBookingStatus;
     })
     .catch(error => {
+        console.log(error);
+    });
+}
+
+exports.myGuidings = (req,res,next) => {
+    bookingModel.find({guideId:req.user._id,status:'APPROVED'})
+    .then(acceptedBookings=>{
+        res.status(200).json({message:"These are the accepted bookings",bookings:acceptedBookings})
+    })
+    .catch(error=>{
         console.log(error);
     });
 }

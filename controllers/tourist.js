@@ -23,7 +23,7 @@ exports.getSelectGuide = async (req,res,next) => {
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         groupType : req.body.groupType,
-        status : 'pending'
+        status : 'PENDING'
     });
     newBooking.save()
     .then(booking => {
@@ -45,7 +45,7 @@ exports.getDealAcceptance = async (req,res,next) => {
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         groupType : req.body.groupType,
-        status : 'accepted'
+        status : 'APPROVED'
     });
     newBooking.save()
     .then(booking=>{

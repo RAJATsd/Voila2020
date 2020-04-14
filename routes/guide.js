@@ -15,6 +15,9 @@ router.get('/guide/offers',auth,guideController.showOffers);
 //requirements : nothing
 router.get('/guide/booking/response/:bookingId/:response',auth,guideController.bookingResponse);
 //responds to the requests sent by the tourists
-//requirements : _id of booking & response in the route as specified 
+//requirements : _id of booking & response in the route as specified
+router.get('/guide/myGuidings',auth,guideController.myGuidings);
+//lists all the offers that are accepted by the guide
+//requirements : nothing 
 
 module.exports = router;
