@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const updationMiddleware = require('./middleware/scheduleFunc');
 const cron = require('cron');
@@ -20,12 +21,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'uploads')));
 
-app.use((req,res,next)=>{
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,PATCH');
-    res.setHeader('Acess-Control-Allow-Headers','*');
-    next();
-});
+app.use(cors());
+// app.use((req,res,next)=>{
+//     res.setHeader('Access-Control-Allow-Origin','*');
+//     res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,DELETE,PATCH');
+//     res.setHeader('Access-Control-Allow-Headers','*');
+//     next();
+// });
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -43,7 +46,7 @@ var storage = multer.diskStorage({
             cb(null,new Date().toISOString()+'_'+file.originalname);
         }
     }
-  });
+});
   
 multer({ storage: storage }).single('profilePic');
 app.use(multer({ storage: storage }).single('profilePic'));

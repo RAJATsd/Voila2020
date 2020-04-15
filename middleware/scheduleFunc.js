@@ -6,7 +6,7 @@ exports.changeBookingStatus = async () =>
     const a = new Date().toJSON().slice(0,10); 
     
 
-    bookingModel.updateMany({status:'finalised',startDate:a},{status:'started'})
+    bookingModel.updateMany({status:'finalised',startDate:a},{status:'ONGOING'})
     .then(updatedBookings => {
         console.log(updatedBookings);
         for(booking of updatedBookings)
