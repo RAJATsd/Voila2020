@@ -8,10 +8,12 @@ exports.addDeal = (req,res,next) => {
         places : req.body.places,
         price : req.body.price,
         guideId : req.user._id,
-        daysOfGuiding : req.body.daysOfGuiding,
+        
         startDate : req.body.startDate,
         endDate : req.body.endDate,
-        city : req.body.city
+        city : req.body.city,
+        state:req.body.state,
+        peopleLimit:req.body.peopleLimit
     });
     newDeal.save()
     .then(deal => {

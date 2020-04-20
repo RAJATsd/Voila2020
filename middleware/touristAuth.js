@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Tourist = require('../models/tourist');
 
 const auth = async (req,res,next) => {
-    const token = req.header('Authorization');
+    const token = req.header('Authorization');//.split(' ')[1];;
     const data = jwt.verify(token,'thisismysecretkeyforthishackathon2020');
     try
     {

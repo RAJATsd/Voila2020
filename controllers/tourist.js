@@ -17,7 +17,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
 exports.getSelectGuide = async (req,res,next) => {
     const newBooking = new bookingsModel({
         guideId : req.params.guideId,
-        touristId : req.user.touristId,
+        touristId : req.user._id,
         price : req.body.price,
         noOfPeople : req.body.noOfPeople,
         startDate : req.body.startDate,
@@ -36,16 +36,18 @@ exports.getSelectGuide = async (req,res,next) => {
 
 exports.getDealAcceptance = async (req,res,next) => {
 
-    const deal = await dealsModel.find({_id:req.params.dealId});
+    const dealArray = await dealsModel.find({_id:req.params.dealId});
+    const deal = dealArray[0];
+    console.log(deal);
     const newBooking = new bookingsModel({
         guideId : deal.guideId,
-        touristId : req.user.touristId,
+        touristId : req.user._id,
         price : deal.price,
+        startDate : deal.startDate,
+        endDate : deal.endDate,
+        status : 'APPROVED',
         noOfPeople : req.body.noOfPeople,
-        startDate : req.body.startDate,
-        endDate : req.body.endDate,
-        groupType : req.body.groupType,
-        status : 'APPROVED'
+        groupType : req.body.groupType
     });
     newBooking.save()
     .then(booking=>{

@@ -23,7 +23,6 @@ const touristSchema = new schema({
         type:String
     },
     picUrl: {
-        required:true,
         type:String
     },
     nationality : {

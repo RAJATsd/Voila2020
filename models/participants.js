@@ -10,7 +10,7 @@ const participantSchema = new schema({
     }],
     tourGuide_Id : [{
         type : schema.Types.ObjectId,
-     }]
+     }],
     created_at : {
           type : Date, 
           default: Date.now 

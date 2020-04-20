@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const dealSchema = new schema({
-    places : {
-        type : Array
-    },
+    places : [{type : String}],
     price : {
         type : Number,
         required:true

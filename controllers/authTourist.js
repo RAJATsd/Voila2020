@@ -48,24 +48,24 @@ exports.postLogin = async(req,res,next) => {
     const password = req.body.password;
 
     Tourist.findOne({email:email})
-    .then(Tourist => {
-        if(!Tourist)
+    .then(result => {
+        if(!result)
         {
             res.status(417).json({message:"No such Tourist exist,please signup if you are a new Tourist"});
         }
         else{
-            bcrypt.compare(password,Tourist.password)
+            bcrypt.compare(password,result.password)
             .then(matchingPassword => {
                 if(!matchingPassword)
                 {
                     res.status(406).json({message:"Password do not match, please try again"});
                 }
                 else{
-                    const token = jwt.sign({email:email,_id:Tourist._id.toString()},'thisismysecretkeyforthishackathon2020',{expiresIn:'5h'});
-                    Tourist.tokens = Tourist.tokens.concat({token});
-                    Tourist.save()
+                    const token = jwt.sign({email:email,_id:result._id.toString()},'thisismysecretkeyforthishackathon2020',{expiresIn:'5h'});
+                    result.tokens = result.tokens.concat({token});
+                    result.save()
                     .then(saved => {
-                        res.status(200).json({message:"Person successfully logged in",token:token,Tourist:Tourist});
+                        res.status(200).json({message:"Person successfully logged in",token:token,Tourist:result});
                     })
                     .catch(errorWhileSave => {
                         console.log(errorWhileSave);

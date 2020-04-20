@@ -13,7 +13,7 @@ router.post('/tourist/guides/offer/:guideId',auth,touristController.getSelectGui
 //requirements : _id of guide as param, everything in the bookings model except touristId,rating,review,reviewDate and status
 
 router.post('/tourist/guides/deals/:dealId',auth,touristController.getDealAcceptance);
-//for making a offer
+//for choosing a deal
 //requirements : _id of deal as param, everything in the bookings model except guideId, touristId,price,rating,review,reviewDate and status
 
 router.get('/tourist/deals/fav/:dealId',auth,touristController.getSetAsFavorites);
