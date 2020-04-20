@@ -8,7 +8,7 @@ exports.postSignup = (req,res,next) => {
     .then(result => {
         if(result)
         {
-            res.json({message:"Giude Already Exist"});
+            res.json({message:"Guide Already Exist"});
         }
         else{
             const password = req.body.password;
@@ -21,7 +21,7 @@ exports.postSignup = (req,res,next) => {
                     dob : req.body.dob,
                     phoneNumber : phoneNumber,
                     email : req.body.email,
-                    interests : req.body.ginterests,
+                    interests : req.body.interests,
                     languages : req.body.languages,
                     nationality:req.body.nationality,
                 });    
