@@ -14,13 +14,9 @@ const dealSchema = new schema({
         type : schema.Types.ObjectId,
         required:true
     },
-    daysOfGuiding : {
-        type: Number,
-        required:true
-    },
     favorites : [
         {type : schema.Types.ObjectId}
-    ] ,
+    ],
     startDate : {
         type : Date,
         required:true
@@ -32,6 +28,14 @@ const dealSchema = new schema({
     city : {
         type : String,
         required: true
+    },
+    state : {
+        type : String,
+        required: true
+    },
+    peopleLimit: {
+        type : Number,
+        required : true
     }
 });
 

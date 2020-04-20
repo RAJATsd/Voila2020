@@ -60,3 +60,4 @@ exports.getSetAsFavorites = async (req,res,next) => {
     const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{'favorites.favorite':req.user._id}});
     res.status(200).json({message:"Added to favorites"});
 }
+

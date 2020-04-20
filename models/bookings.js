@@ -46,7 +46,7 @@ const bookingSchema = new schema({
     },
     status : {
         type : String,
-        default:'pending'
+        default:'PENDING'
     }
 });
 

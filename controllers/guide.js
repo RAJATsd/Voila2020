@@ -1,6 +1,7 @@
 const dealModel = require('../models/deals');
 const bookingModel = require('../models/bookings');
 const updationMiddleware = require('../middleware/scheduleFunc');
+const Guide = require('../models/tourGuide');
 
 exports.addDeal = (req,res,next) => {
     const newDeal = new dealModel({
@@ -50,5 +51,11 @@ exports.myGuidings = (req,res,next) => {
     .catch(error=>{
         console.log(error);
     });
+}
+
+exports.editProfile = async (req,res,next) => {
+  await Guide.findByIdAndUpdate({_id:req.user._id},req.body);
+  const profile = await Guide.findById({_id:req.user._id});
+  res.status(200).json({message:"The pofile has been updated",profile:profile});
 }
 

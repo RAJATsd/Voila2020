@@ -19,5 +19,8 @@ router.get('/guide/booking/response/:bookingId/:response',auth,guideController.b
 router.get('/guide/myGuidings',auth,guideController.myGuidings);
 //lists all the offers that are accepted by the guide
 //requirements : nothing 
+router.put('/guide/profile/change',auth,guideController.editProfile);
+//edits any changes in the profile
+//requirements : fields in req.body
 
 module.exports = router;
