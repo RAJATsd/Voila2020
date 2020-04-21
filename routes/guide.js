@@ -10,15 +10,12 @@ router.post ('/guide/deals/add',auth,guideController.addDeal);
 router.get('/guide/deals',auth,guideController.showDeal);
 //lists all the of the particular guide
 //requirements : nothing
-router.get('/guide/offers',auth,guideController.showOffers);
+router.get('/guide/offers/:status',auth,guideController.showOffers);
 //shows the request sent to the guide by tourist
 //requirements : nothing
 router.get('/guide/booking/response/:bookingId/:response',auth,guideController.bookingResponse);
 //responds to the requests sent by the tourists
 //requirements : _id of booking & response in the route as specified
-router.get('/guide/myGuidings',auth,guideController.myGuidings);
-//lists all the offers that are accepted by the guide
-//requirements : nothing 
 router.put('/guide/profile/change',auth,guideController.editProfile);
 //edits any changes in the profile
 //requirements : fields in req.body
