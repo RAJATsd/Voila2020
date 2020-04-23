@@ -31,7 +31,7 @@ exports.showDeal = async (req,res,next) => {
 
 exports.showOffers = async (req,res,next) => {
     const status = req.params.status;
-    const Bookings = await bookingModel.find({guideId:req.user._id,status:status});
+    const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).populate('touristId');
     res.status(200).json({message:"found these offers",bookings:Bookings});
 }
 

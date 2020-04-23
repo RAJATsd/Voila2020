@@ -3,7 +3,8 @@ const schema = mongoose.Schema;
 
 const answerSchema = new schema({
     guideId : {
-        type : schema.Types.ObjectId
+        type : schema.Types.ObjectId,
+        ref:'tourGuide'
     },
     answerOne : {
         type : String,

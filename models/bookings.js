@@ -5,11 +5,13 @@ const schema = mongoose.Schema;
 const bookingSchema = new schema({
     guideId : {
         required:true,
-        type:schema.Types.ObjectId
+        type:schema.Types.ObjectId,
+        ref:'tourGuide'
     },
     touristId : {
         required:true,
-        type:schema.Types.ObjectId
+        type:schema.Types.ObjectId,
+        ref:'tourist'
     },
     bookingDate : {
         default: new Date().toJSON().slice(0,10),
@@ -47,7 +49,18 @@ const bookingSchema = new schema({
     status : {
         type : String,
         default:'PENDING'
-    }
+    },
+    places : [
+        {
+            type:String,
+            required:true
+        }
+    ],
+    tourType : {
+        type:String,
+        default:'personalized'
+    },
+    duration : {type:Number}
 });
 
 module.exports = mongoose.model('booking',bookingSchema);

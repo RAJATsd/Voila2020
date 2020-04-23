@@ -39,7 +39,7 @@ const tourGuideSchema = new schema({
             type: Number
         },
         duration : {
-            type : Number
+            type : String
         },
         profile : {
             type : String
