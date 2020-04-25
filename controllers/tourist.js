@@ -23,13 +23,15 @@ exports.getSelectGuide = async (req,res,next) => {
         places : req.body.places,
         startDate : req.body.startDate,
         endDate : req.body.endDate,
-        duration : (req.body.endDate.getTime()-req.body.startDate.getTime())/86400000,
         groupType : req.body.groupType,
         status : 'PENDING'
     });
     newBooking.save()
     .then(booking => {
-        res.status(201).json({message:"Booking created successfully",booking:booking});
+        booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
+        booking.save()
+        .then(savedBooking => res.status(200).json({message:"Booking created successfully",booking:savedBooking}))
+        .catch(error => console.log(error));
     })
     .catch(error => {
         console.log(error);
@@ -40,7 +42,6 @@ exports.getDealAcceptance = async (req,res,next) => {
 
     const dealArray = await dealsModel.find({_id:req.params.dealId});
     const deal = dealArray[0];
-    console.log(deal);
     const newBooking = new bookingsModel({
         guideId : deal.guideId,
         touristId : req.user._id,

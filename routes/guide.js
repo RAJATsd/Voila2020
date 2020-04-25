@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/guide/deals/add',auth,guideController.addDeal);
 //adds deal for the guide
 //requirements: all the fields in the deals schema except guideId and favorites
-router.post('/guide/changePassword',auth,commonController.changePassword);
 
 router.get('/guide/deals',auth,guideController.showDeal);
 //lists all the of the particular guide
@@ -23,10 +22,10 @@ router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
 
-router.put('guide/profile/update/:USER',auth,commonController.editProfile);
+router.put('/guide/profile/update/:USER',auth,commonController.editProfile);
 //edits any changes in the profile
 //requirements : fields in req.body, USER in params which will be either GUIDE or TOURIST
-router.put('guide/profile/changePassword',auth,commonController.changePassword);
+router.put('/guide/profile/changePassword',auth,commonController.changePassword);
 //changes the password
 //requirements : New password in the field newPassword as the key name
 

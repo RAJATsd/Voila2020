@@ -15,10 +15,11 @@ exports.changePassword = async (req,res,next) => {
 }
 
 exports.editProfile = async (req,res,next) => {
+    let userModel;
     if(req.params.USER == 'GUIDE')
-        const userModel = guideModel;
+        userModel = guideModel;
     else
-        const userModel = touristModel;
+        userModel = touristModel;
 
     await userModel.findByIdAndUpdate({_id:req.user._id},req.body);
     const profile = await userModel.findById({_id:req.user._id});

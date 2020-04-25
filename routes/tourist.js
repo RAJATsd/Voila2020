@@ -34,10 +34,10 @@ router.get('/tourist/deals/guide/:guideId',touristController.specificGuideDeals)
 //sends the deals of a specific guide
 //requirements : guide id of the specific guide
 
-router.put('tourist/profile/update/:USER',auth,commonController.editProfile);
+router.put('/tourist/profile/update/:USER',auth,commonController.editProfile);
 //edits any changes in the profile
 //requirements : fields in req.body, USER in params which will be either GUIDE or TOURIST
-router.put('tourist/profile/changePassword',auth,commonController.changePassword);
+router.put('/tourist/profile/changePassword',auth,commonController.changePassword);
 //changes the password
 //requirements : New password in the field newPassword as the key name
 

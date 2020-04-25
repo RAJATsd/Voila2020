@@ -5,11 +5,11 @@ const jwt = require('jsonwebtoken');
 exports.postSignup = (req,res,next) => {
     const userData = JSON.parse(req.body.data);
     const phoneNumber = userData.phoneNumber;
-    const profilePic = req.file;
-    if(!profilePic)
-    {
-        return res.json({message:"no file uploaded"});
-    }
+    // const profilePic = req.file;
+    // if(!profilePic)
+    // {
+    //     return res.json({message:"no file uploaded"});
+    // }
     Guide.findOne({phoneNumber:phoneNumber})
     .then(result => {
         if(result)
@@ -17,7 +17,7 @@ exports.postSignup = (req,res,next) => {
             res.json({message:"Guide Already Exist"});
         }
         else{
-            const picUrl = 'localhost:3000/profileImages/'+profilePic.filename;
+            //const picUrl = 'localhost:3000/profileImages/'+profilePic.filename;
             const password = userData.password;
             bcrypt.hash(password,8)
             .then(hashed=>{
@@ -33,7 +33,7 @@ exports.postSignup = (req,res,next) => {
                     peopleLimit : userData.peopleLimit,
                     perHeadCharge : userData.perHeadCharge,
                     perDayCharge : userData.perDayCharge,
-                    picUrl : picUrl,
+                    //picUrl : picUrl,
                     aadhaarNumber : userData.aadhaarNumber,
                     interests : userData.interests,
                     languages : userData.languages,
