@@ -21,6 +21,9 @@ router.get('/guide/booking/response/:bookingId/:response',auth,guideController.b
 router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
+router.get('/guide/deal/:dealId',auth,guideController.dealInfo);
+//sends the info of a particular deal
+//requirements : dealId in params
 
 router.put('/guide/profile/update/:USER',auth,commonController.editProfile);
 //edits any changes in the profile

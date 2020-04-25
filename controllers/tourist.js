@@ -52,7 +52,7 @@ exports.getDealAcceptance = async (req,res,next) => {
         status : 'APPROVED',
         noOfPeople : req.body.noOfPeople,
         groupType : req.body.groupType,
-        duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
+        duration : deal.duration,
         tourType : 'deal'
     });
     newBooking.save()

@@ -17,7 +17,10 @@ exports.addDeal = (req,res,next) => {
     });
     newDeal.save()
     .then(deal => {
-        res.status(201).json({message:"New Deal Created",deal:deal});
+        deal.duration = (deal.endDate.getTime()-deal.startDate.getTime())/86400000;
+        deal.save()
+        .then(savedDeal => res.status(201).json({message:"New Deal Created",deal:savedDeal}))
+        .catch(error=>console.log(error));
     })
     .catch(error => {
         console.log(error);
@@ -25,7 +28,7 @@ exports.addDeal = (req,res,next) => {
 }
 
 exports.showDeal = async (req,res,next) => {
-    const deals = await dealModel.find({guideId:req.user._id});
+    const deals = await dealModel.find({guideId:req.user._id}).populate('guideId');
     res.status(200).json({message:"these are the deals",deals:deals});
 }
 
@@ -52,3 +55,7 @@ exports.editProfile = async (req,res,next) => {
   res.status(200).json({message:"The pofile has been updated",profile:profile});
 }
 
+exports.dealInfo = async (req,res,next) => {
+    const deal = await dealModel.findById({_id:req.params.dealId}).populate('guideId');
+    res.status(200).json({message:"This is the info of the deal",deal:deal});
+}
