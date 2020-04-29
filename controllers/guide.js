@@ -3,7 +3,7 @@ const bookingModel = require('../models/bookings');
 const updationMiddleware = require('../middleware/scheduleFunc');
 const Guide = require('../models/tourGuide');
 
-exports.addDeal = (req,res,next) => {
+exports.addDeal = async (req,res,next) => {
     const newDeal = new dealModel({
         places : req.body.places,
         price : req.body.price,
@@ -19,7 +19,14 @@ exports.addDeal = (req,res,next) => {
     .then(deal => {
         deal.duration = (deal.endDate.getTime()-deal.startDate.getTime())/86400000;
         deal.save()
-        .then(savedDeal => res.status(201).json({message:"New Deal Created",deal:savedDeal}))
+        .then(savedDeal =>{
+            req.user.deals.push(savedDeal._id);
+            req.user.save()
+            .then(changedUser => {
+                res.status(201).json({message:"New Deal Created",deal:savedDeal});
+            })
+            .catch(errors=>console.log(errors));            
+        })
         .catch(error=>console.log(error));
     })
     .catch(error => {

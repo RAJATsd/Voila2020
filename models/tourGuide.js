@@ -77,6 +77,11 @@ const tourGuideSchema = new schema({
         required : true,
         type : String
     },
+    deals : [
+        {type:schema.Types.ObjectId,
+         ref:'deal'
+        }
+    ],
     state : {
         required : true,
         type : String

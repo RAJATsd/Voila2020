@@ -23,5 +23,5 @@ exports.editProfile = async (req,res,next) => {
 
     await userModel.findByIdAndUpdate({_id:req.user._id},req.body);
     const profile = await userModel.findById({_id:req.user._id});
-    res.status(200).json({message:"The profile has been updated",profile:profile});
+    res.status(200).json({message:"The profile has been updated",profile:profile});   
 }
