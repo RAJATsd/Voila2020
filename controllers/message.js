@@ -3,6 +3,33 @@ const Conversation = require('../models/Conversation');
 const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
+exports.GetAllMessages = (req,res,next) => {
+	const {sender_Id,receiver_Id} = req.params;
+	const conversation = await Conversation.findOne({
+		$or:[
+		{
+			$and : [
+			{'participants.senderId' : sender_Id},
+			{'participants.receiverId' : receiver_Id},
+			]
+		},{
+			$and : [
+			{'participants.senderId' : receiver_Id},
+			{'participants.receiverId' : sender_Id},
+			]
+		}
+	]
+	}).select('_id');
+
+	if (conversation){
+		const msg = await Message.findOne({
+			conversationId : conversation_id
+		});
+	res.status(200).json({message:"messages fetched",msg:msg});
+
+	}
+}
+
 exports.SendMessage = (req,res,next) => {
 	//console.log(req.body);
 	const {sender_Id,receiver_Id} = req.params;
@@ -38,7 +65,7 @@ exports.SendMessage = (req,res,next) => {
 
 		});
 		
-		if(req.body.senderRole == 'GUIDE')
+		if(req.body.senderRole == 'guide')
 			userModel = guideModel;
     	else
         userModel = touristModel;
@@ -54,7 +81,7 @@ exports.SendMessage = (req,res,next) => {
 							msgId : newMessage._id
 						}
 					],
-					$position : 0;
+					$position : 0
 					
 				}
 			}
@@ -71,7 +98,7 @@ exports.SendMessage = (req,res,next) => {
 							msgId : newMessage._id
 						}
 					],
-					$position : 0;
+					$position : 0
 					
 				}
 			}
@@ -80,7 +107,7 @@ exports.SendMessage = (req,res,next) => {
 
 		await newMessage.save()
 		.then(message => {
-			res.status(201).json({message:"Message Sen",message:message});
+			res.status(201).json({message:"Message Sent",message:message});
 		})
 		.catch(error => {
         console.log(error);
