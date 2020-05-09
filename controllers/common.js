@@ -34,3 +34,4 @@ exports.getUserByEmail = async (req,res,next) => {
         userModel = touristModel;
     const profile = await userModel.findOne({email:req.params.email});
     res.status(200).json({message:"The is the desired profile",profile:profile});
+}
