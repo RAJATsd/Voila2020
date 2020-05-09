@@ -5,11 +5,11 @@ const ConversationSchema = new schema({
     participants : [
     {
         senderId: {
-            schema.Types.ObjectId, 
+            type :schema.Types.ObjectId, 
             ref:'tourGuide'
         },
         receiverId: {
-            schema.Types.ObjectId, 
+            type : schema.Types.ObjectId, 
             ref:'tourist'
         }
     }

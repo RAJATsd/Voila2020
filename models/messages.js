@@ -16,27 +16,27 @@ const MessageSchema = new schema({
     {
        
         senderId: {
-            schema.Types.ObjectId, 
+            type : schema.Types.ObjectId, 
             ref:'tourGuide'
         },
         receiverId: {
-            schema.Types.ObjectId, 
+           type : schema.Types.ObjectId, 
             ref:'tourist'
         },
         sendername: {
             type : String
-        }
+        },
         receivername: {
             type : String
         },
         body: {
             type : String, 
             default: ''
-        }
+        },
         isRead : {
             type : Boolean,
             default: false
-        }
+        },
         createdAt: {
             type : Date,
             default:Date.now()
