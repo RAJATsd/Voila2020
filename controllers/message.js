@@ -1,6 +1,7 @@
 const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
-const Guide = require('../models/tourGuide');
+const guideModel = require('../models/tourGuide');
+const touristModel = require('../models/tourist');
 
 exports.SendMessage = (req,res,next) => {
 	//console.log(req.body);
@@ -8,8 +9,8 @@ exports.SendMessage = (req,res,next) => {
 
 	Conversation.find({
 		$or:[
-			{participants : {elemMatch: {senderId = sender_Id, receiverId: receiver_Id}}},
-			{participants : {elemMatch: {senderId = receiver_Id, receiverId: sender_Id }}}
+			{participants : {elemMatch: {senderId : sender_Id, receiverId: receiver_Id}}},
+			{participants : {elemMatch: {senderId : receiver_Id, receiverId: sender_Id }}}
 		]
 	},async(err,result)=>{
 		if(result.length){
@@ -20,13 +21,13 @@ exports.SendMessage = (req,res,next) => {
 				senderId : req.user._id,
 				receiverId : req.params.receiver_Id 
 			});
-		const saveConversation : await newConversation.save();
+		const saveConversation = await newConversation.save();
 		//console.log(saveConversation);
 		
 		const newMessage = new Message();
-		newMessage.conversationId : saveConversation._id;
-		newMessage.sender : req.user.email;
-		newMessage.receiver : req.body.receiverName;
+		newMessage.conversationId = saveConversation._id;
+		newMessage.sender = req.user.email;
+		newMessage.receiver = req.body.receiverName;
 		newMessage.message.push(
 		{
 			senderId : req.user._id,
@@ -36,9 +37,50 @@ exports.SendMessage = (req,res,next) => {
 			body : req.body.message,
 
 		});
+		
+		if(req.body.senderRole == 'GUIDE')
+			userModel = guideModel;
+    	else
+        userModel = touristModel;
+		
+		const Profile1 = await userModel.update({
+			_id : req.user._id
+		},{
+			$push: {
+				chatList:{
+					$each:[
+						{
+							receiverId : req.params.receiver_Id,
+							msgId : newMessage._id
+						}
+					],
+					$position : 0;
+					
+				}
+			}
+		})
+		console.log(Profile1);
+		const Profile2 = await userModel.update({
+			_id : req.params.receiver_Id
+		},{
+			$push: {
+				chatList:{
+					$each:[
+						{
+							receiverId : req.user._id,
+							msgId : newMessage._id
+						}
+					],
+					$position : 0;
+					
+				}
+			}
+		})
+		console.log(Profile2);
+
 		await newMessage.save()
 		.then(message => {
-			res.status(201).json({message:"New Conversation Created",message:message});
+			res.status(201).json({message:"Message Sen",message:message});
 		})
 		.catch(error => {
         console.log(error);
