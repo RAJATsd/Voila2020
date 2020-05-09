@@ -31,5 +31,7 @@ router.put('/guide/profile/update/:USER',auth,commonController.editProfile);
 router.put('/guide/profile/changePassword',auth,commonController.changePassword);
 //changes the password
 //requirements : New password in the field newPassword as the key name
-
+router.get('/getUserByEmail/:role/:email',auth,commonController.getUserByEmail);
+//gets user with provided email
+//requirements : email and role in params
 module.exports = router;
