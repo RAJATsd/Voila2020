@@ -2,16 +2,15 @@ const guideModel = require('../models/tourGuide');
 const dealsModel = require('../models/deals');
 const bookingsModel = require('../models/bookings');
 
+exports.searchResult = async (req,res,next) => {
+    const guides = await guideModel.find({city:req.body.city}).populate('deals');
+    const deals = await dealsModel.find({city:req.body.city}).where('startDate').gte(req.body.startDate).populate('guideId');
+    res.status(200).json({message:"These are the guides and the deals",guides:guides,deals:deals});
+}
 
-exports.getGuidesBySearch = async (req,res,next) => {
-    const city = req.body.city;
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
-    //noOfPeople            
-    const guides = await guideModel.find({city:city});
-    const deals = await dealsModel.find({endDate:{$gte:startDate}}).populate('guideId');
-
-    res.status(302).json({guides:guides,deals:deals});
+exports.specificGuideDetails = async (req,res,next) => {
+    const guide = await guideModel.findOne({_id:req.params.guideId}).populate('deals');
+    res.status(200).json({message:"The details of the guide",guide:guide});
 }
 
 exports.getSelectGuide = async (req,res,next) => {
@@ -52,7 +51,7 @@ exports.getDealAcceptance = async (req,res,next) => {
         status : 'APPROVED',
         noOfPeople : req.body.noOfPeople,
         groupType : req.body.groupType,
-        duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
+        duration : deal.duration,
         tourType : 'deal'
     });
     newBooking.save()
@@ -65,8 +64,14 @@ exports.getDealAcceptance = async (req,res,next) => {
 }
 
 exports.getSetAsFavorites = async (req,res,next) => {
-    const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{'favorites.favorite':req.user._id}});
-    res.status(200).json({message:"Added to favorites"});
+    const deal = await dealsModel.findById({_id:req.params.dealId});
+    const favorite =  req.user._id;
+    deal.favorites = deal.favorites.concat({favorite});
+    deal.save()
+    .then(savedDeal => {
+        res.status(200).json({message:"Deal added as favorite",deal:savedDeal});
+    })
+    .catch(error => console.log(error));
 }
 
 exports.myBookings = async (req,res,next) => {
