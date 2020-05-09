@@ -40,6 +40,6 @@ router.put('/tourist/profile/update/:USER',auth,commonController.editProfile);
 router.put('/tourist/profile/changePassword',auth,commonController.changePassword);
 //changes the password
 //requirements : New password in the field newPassword as the key name
-
+router.get('/getUserByEmail/:role/:email',auth,commonController.getUserByEmail);
 
 module.exports = router;
