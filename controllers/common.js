@@ -28,7 +28,7 @@ exports.editProfile = async (req,res,next) => {
 
 exports.getUserByEmail = async (req,res,next) => {
     let userModel;
-    if(req.params.role == 'GUIDE')
+    if(req.params.role == 'guide')
         userModel = guideModel;
     else
         userModel = touristModel;
