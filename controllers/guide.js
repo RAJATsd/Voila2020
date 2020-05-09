@@ -8,7 +8,6 @@ exports.addDeal = (req,res,next) => {
         places : req.body.places,
         price : req.body.price,
         guideId : req.user._id,
-        
         startDate : req.body.startDate,
         endDate : req.body.endDate,
         city : req.body.city,

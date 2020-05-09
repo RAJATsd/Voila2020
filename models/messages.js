@@ -4,7 +4,7 @@ const schema = mongoose.Schema;
 const MessageSchema = new schema({
     conversationId : {
         type : schema.Types.ObjectId ,  
-        ref: 'conversation'
+        ref: 'Conversation'
     },
     sender : {
         type : String
@@ -45,4 +45,4 @@ const MessageSchema = new schema({
     ]
 });
 
-module.exports = mongoose.model('Messages',MessageSchema);
+module.exports = mongoose.model('Message',MessageSchema);
