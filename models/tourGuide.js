@@ -101,15 +101,17 @@ const tourGuideSchema = new schema({
         default:'pending'
     },
     chatList : [
+    {
         receiverId: {
-            schema.Types.ObjectId, 
+            type : schema.Types.ObjectId, 
             ref:'tourist'
         },
         msgId: {
-            schema.Types.ObjectId, 
+           type :  schema.Types.ObjectId, 
             ref:'Messages'
         }
-    ]
+    }
+]
 });
 
 

@@ -46,15 +46,17 @@ const touristSchema = new schema({
         default:true
     },
     chatList : [
+        {
         receiverId: {
-            schema.Types.ObjectId, 
+            type : schema.Types.ObjectId, 
             ref:'tourGuide'
         },
         msgId: {
-            schema.Types.ObjectId, 
+            type : schema.Types.ObjectId, 
             ref:'Messages'
         }
-    ],
+    }
+],
     tokens : [{
         token : {
             type:String
