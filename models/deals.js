@@ -8,7 +8,6 @@ const dealSchema = new schema({
         type : Number,
         required:true
     },
-    duration :{type:Number},
     guideId : {
         type : schema.Types.ObjectId,
         required:true,
