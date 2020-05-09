@@ -25,3 +25,12 @@ exports.editProfile = async (req,res,next) => {
     const profile = await userModel.findById({_id:req.user._id});
     res.status(200).json({message:"The profile has been updated",profile:profile});
 }
+
+exports.getUserByEmail = async (req,res,next) => {
+    let userModel;
+    if(req.params.role == 'GUIDE')
+        userModel = guideModel;
+    else
+        userModel = touristModel;
+    const profile = await userModel.findOne({email:req.params.email});
+    res.status(200).json({message:"The is the desired profile",profile:profile});
