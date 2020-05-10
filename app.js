@@ -30,6 +30,8 @@ app.use(cors());
 //     next();
 // });
 
+create server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -77,4 +79,4 @@ mongoose.connect(MONGO_URI,{useNewUrlParser:true})
     console.log(err);
 });
 
-app.listen(SERVER_PORT,()=>{console.log(`Server running on port ${SERVER_PORT}`)});
+server.listen(SERVER_PORT,()=>{console.log(`Server running on port ${SERVER_PORT}`)});
