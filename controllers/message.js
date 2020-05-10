@@ -36,8 +36,8 @@ exports.SendMessage = (req,res,next) => {
 
 	Conversation.find({
 		$or:[
-			{participants : {elemMatch: {senderId : sender_Id, receiverId: receiver_Id}}},
-			{participants : {elemMatch: {senderId : receiver_Id, receiverId: sender_Id }}}
+			{participants : {$elemMatch: {senderId : sender_Id, receiverId: receiver_Id}}},
+			{participants : {$elemMatch: {senderId : receiver_Id, receiverId: sender_Id }}}
 		]
 	},async(err,result)=>{
 		if(result.length){
@@ -47,8 +47,8 @@ exports.SendMessage = (req,res,next) => {
 			},
 			{
 			$push :{
-				$message :{
-					senderId : req.user._id,
+				message :{
+				senderId : req.user._id,
 				receiverId : req.params.receiver_Id,
 				sender : req.user.email,
 				receiver : req.body.receiverName,
@@ -56,9 +56,9 @@ exports.SendMessage = (req,res,next) => {
 				}
 			}
 		}
-			).then() => {
+			).then(() => {
 			res.status(201).json({message:"Message Sent"});
-		}
+		})
 		.catch(error => {
         console.log(error);
     });
@@ -133,5 +133,5 @@ exports.SendMessage = (req,res,next) => {
         console.log(error);
     });
 		}
-	}
+	})
 }
