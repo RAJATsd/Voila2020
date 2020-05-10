@@ -29,8 +29,10 @@ app.use(cors());
 //     res.setHeader('Access-Control-Allow-Headers','*');
 //     next();
 // });
+require('./socket/stream')(io);
+require('./socket/private')(io);
 
-create server = require('http').createServer(app);
+const server = require('http').createServer(app);
 const io = require('socket.io').listen(server);
 
 var storage = multer.diskStorage({
