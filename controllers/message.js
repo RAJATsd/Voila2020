@@ -3,7 +3,7 @@ const Conversation = require('../models/Conversation');
 const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
-exports.GetAllMessages = (req,res,next) => {
+exports.GetAllMessages = async(req,res,next) => {
 	const {sender_Id,receiver_Id} = req.params;
 	const conversation = await Conversation.findOne({
 		$or:[
@@ -23,7 +23,7 @@ exports.GetAllMessages = (req,res,next) => {
 
 	if (conversation){
 		const msg = await Message.findOne({
-			conversationId : conversation_id
+			conversationId : conversation._id
 		});
 	res.status(200).json({message:"messages fetched",msg:msg});
 
@@ -41,7 +41,27 @@ exports.SendMessage = (req,res,next) => {
 		]
 	},async(err,result)=>{
 		if(result.length){
-
+			await Message.update(
+			{
+				conversationId : result[0]._id
+			},
+			{
+			$push :{
+				$message :{
+					senderId : req.user._id,
+				receiverId : req.params.receiver_Id,
+				sender : req.user.email,
+				receiver : req.body.receiverName,
+				body : req.body.message,
+				}
+			}
+		}
+			).then() => {
+			res.status(201).json({message:"Message Sent"});
+		}
+		.catch(error => {
+        console.log(error);
+    });
 		}else{
 			const newConversation = new Conversation();
 			newConversation.participants.push({
@@ -86,7 +106,7 @@ exports.SendMessage = (req,res,next) => {
 				}
 			}
 		})
-		console.log(Profile1);
+	//	console.log(Profile1);
 		const Profile2 = await userModel.update({
 			_id : req.params.receiver_Id
 		},{
@@ -103,7 +123,7 @@ exports.SendMessage = (req,res,next) => {
 				}
 			}
 		})
-		console.log(Profile2);
+		//console.log(Profile2);
 
 		await newMessage.save()
 		.then(message => {
@@ -113,5 +133,5 @@ exports.SendMessage = (req,res,next) => {
         console.log(error);
     });
 		}
-	})
+	}
 }
