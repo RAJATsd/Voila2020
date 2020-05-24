@@ -48,6 +48,8 @@ exports.postLogin = async(req,res,next) => {
     const password = req.body.password;
 
     Tourist.findOne({email:email})
+    .populate('chatList.receiverId');
+    .populate('chatList.msgId');
     .then(result => {
         if(!result)
         {

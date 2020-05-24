@@ -3,6 +3,7 @@ const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
 exports.myProfile = async(req,res,next) => {
+    
     res.status(200).json({message:"Info of the profile",user:req.user});
 }
 
