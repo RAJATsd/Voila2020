@@ -12,7 +12,8 @@ exports.myProfile = async(req,res,next) => {
     // .then(user => {
      //console.log(user); 
      .then(guide => {
-    res.status(200).json({message:"Info of the profile",user:req.user});
+    console.log(guide);
+    res.status(200).json({message:"Info of the profile",user:guide});
     })
     // .catch(err => {
     //     console.log(err);
