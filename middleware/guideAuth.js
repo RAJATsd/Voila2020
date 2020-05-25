@@ -7,7 +7,9 @@ const auth = async (req,res,next) => {
     try
     {
         console.log("I am in");
-        const user = await Guide.findOne({email:data.email,'tokens.token':token});
+        const user = await Guide.findOne({email:data.email,'tokens.token':token})
+        .populate('chatList.receiverId')
+        .populate('chatList.msgId')        
         if(!user)
         {
             throw new Error();
