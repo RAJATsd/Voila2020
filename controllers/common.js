@@ -3,10 +3,17 @@ const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
 exports.myProfile = async(req,res,next) => {
-    const User = req.user;
-    User.populate('chatList.receiverId')
-    User.populate('chatList.msgId')
-    res.status(200).json({message:"Info of the profile",user:req.user});
+    const user = req.user
+    //console.log(req.email);
+    user.find({email : req.email})
+    .then(user => {
+     //console.log(user);   
+    res.status(200).json({message:"Info of the profile",user:user});
+    })
+    .catch(err => {
+        console.log(err);
+    });
+   
 }
 
 exports.changePassword = async (req,res,next) => {
