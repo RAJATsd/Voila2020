@@ -63,7 +63,6 @@ exports.postLogin = async(req,res,next) => {
     const password = req.body.password;
 
     Guide.findOne({email:email})
-    
     .populate('chatList.receiverId')
     .populate('chatList.msgId')
     .then(guide => {

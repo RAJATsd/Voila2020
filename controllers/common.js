@@ -3,16 +3,20 @@ const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
 exports.myProfile = async(req,res,next) => {
-    const user = req.user
-    //console.log(req.email);
-    user.find({email : req.email})
-    .then(user => {
-     //console.log(user);   
-    res.status(200).json({message:"Info of the profile",user:user});
+    guideModel.findOne({email:req.user.email})
+    .populate('chatList.receiverId')
+    .populate('chatList.msgId')
+    // const user = req.user
+    // //console.log(req.email);
+    // user.find({email : req.email})
+    // .then(user => {
+     //console.log(user); 
+     .then(guide => {
+    res.status(200).json({message:"Info of the profile",user:req.user});
     })
-    .catch(err => {
-        console.log(err);
-    });
+    // .catch(err => {
+    //     console.log(err);
+    // });
    
 }
 
