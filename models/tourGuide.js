@@ -107,7 +107,7 @@ const tourGuideSchema = new schema({
             ref:'tourist'
         },
         msgId: {
-           type :  schema.Types.ObjectId, 
+           type : schema.Types.ObjectId, 
             ref:'Message'
         }
     }

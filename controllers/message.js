@@ -50,8 +50,8 @@ exports.SendMessage = (req,res,next) => {
 				message :{
 				senderId : req.user._id,
 				receiverId : req.params.receiver_Id,
-				sender : req.user.email,
-				receiver : req.body.receiverName,
+				sendername : req.user.email,
+				receivername : req.body.receiverName,
 				body : req.body.message,
 				}
 			}
@@ -73,14 +73,14 @@ exports.SendMessage = (req,res,next) => {
 		
 		const newMessage = new Message();
 		newMessage.conversationId = saveConversation._id;
-		newMessage.sender = req.user.email;
-		newMessage.receiver = req.body.receiverName;
+		newMessage.sendername = req.user.email;
+		newMessage.receivername = req.body.receiverName;
 		newMessage.message.push(
 		{
 			senderId : req.user._id,
 			receiverId : req.params.receiver_Id,
-			sender : req.user.email,
-			receiver : req.body.receiverName,
+			sendername : req.user.email,
+			receivername : req.body.receiverName,
 			body : req.body.message,
 
 		});
