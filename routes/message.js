@@ -9,6 +9,8 @@ const auth1 = require('../middleware/touristAuth');
 
 router.get('/guide/chat-messages/:sender_Id/:receiver_Id',auth,MessageCtrl.GetAllMessages)
 
+router.get('/receiver-messages/:sender/:receiver',auth,MessageCtrl.MarkReceiverMessages)
+
 router.post('/guide/chat-messages/:sender_Id/:receiver_Id',auth,MessageCtrl.SendMessage)
 
 router.post('/tourist/chat-messages/:sender_Id/:receiver_Id',auth1,MessageCtrl.SendMessage)

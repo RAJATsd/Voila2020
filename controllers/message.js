@@ -134,4 +134,7 @@ exports.SendMessage = (req,res,next) => {
     });
 		}
 	})
+	async MarkReceiverMessages(req,res){
+		console.log(req.params);
+	}  
 }
