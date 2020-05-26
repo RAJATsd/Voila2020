@@ -8,15 +8,14 @@ const auth = async (req,res,next) => {
     {
         console.log("I am in");
         const user = await Guide.findOne({email:data.email,'tokens.token':token})
-        .populate('chatList.receiverId')
-        .populate('chatList.msgId')        
+              
         if(!user)
         {
             throw new Error();
         }
         req.user = user;
         req.token = token;
-        req.email =  data.email;
+        
         next();
     }
     catch (error)

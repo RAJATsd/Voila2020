@@ -7,8 +7,7 @@ const auth = async (req,res,next) => {
     try
     {
         const user = await Tourist.findOne({email:data.email,'tokens.token':token})
-        .populate('chatList.receiverId')
-        .populate('chatList.msgId')  
+         
         if(!user)
         {
             throw new Error();
