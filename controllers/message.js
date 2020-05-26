@@ -136,8 +136,35 @@ exports.SendMessage = (req,res,next) => {
 	})
 	
 exports.MarkReceiverMessages = async(req,res,next) => {
-		console.log(req.params);	
-		
+		//console.log(req.params);	
+		const {sender,receiver} = req.params,
+		const msg = await Message.aggregate([
+		{$unwind : '$message'},
+		 {
+		 	$match: {
+		 		$and : [
+		 		{'message.sendername' : receiver, 'messgae.receivername' : sender}
+		 		]
+		 	}
+		 }
+		 ]);
+		//console.log(msg);
+		if(msg.length > 0){
+			try {
+				msg.forEach(async (value) => {
+					await Message.update({
+						'message_id' : value.message._id
+					},
+					{$set: {'message.$.isRead' : true} }
+					);
+				});
+				res.status(200).json({message : 'Messages marked as read'});
+			}catch(err){
+				res.status(400).json({message : 'error'});
+			}
+		}
 
 	}  
 }
+
+
