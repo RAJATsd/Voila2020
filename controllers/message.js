@@ -143,7 +143,7 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 		 {
 		 	$match: {
 		 		$and : [
-		 		{'message.sendername' : receiver, 'messgae.receivername' : sender}
+		 		{'message.sendername' : receiver, 'message.receivername' : sender}
 		 		]
 		 	}
 		 }
@@ -164,7 +164,9 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 			}
 		}
 
-	}  
-}
+	}
+
+} 
+
 
 
