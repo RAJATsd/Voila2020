@@ -12,10 +12,10 @@ const authTouristRoutes = require('./routes/authTourist');
 const guideRoutes = require('./routes/guide');
 const touristRoutes = require('./routes/tourist');
 const messageRoutes = require('./routes/message');
+//require('dotenv').config();
 
 const SERVER_PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/voila';
-
 
 const app = express();
 

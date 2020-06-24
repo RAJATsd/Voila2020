@@ -1,5 +1,5 @@
-const Message = require('../models/Message');
-const Conversation = require('../models/Conversation');
+const Message = require('../models/messages');
+const Conversation = require('../models/conversation');
 const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
@@ -40,7 +40,9 @@ exports.SendMessage = (req,res,next) => {
 			{participants : {$elemMatch: {senderId : receiver_Id, receiverId: sender_Id }}}
 		]
 	},async(err,result)=>{
-		if(result.length){
+		console.log("result is: ", result);
+		if(result.length > 0){
+			console.log("in if block!");
 			await Message.update(
 			{
 				conversationId : result[0]._id
@@ -63,13 +65,14 @@ exports.SendMessage = (req,res,next) => {
         console.log(error);
     });
 		}else{
+			console.log("in else block!");
 			const newConversation = new Conversation();
 			newConversation.participants.push({
 				senderId : req.user._id,
 				receiverId : req.params.receiver_Id 
 			});
 		const saveConversation = await newConversation.save();
-		//console.log(saveConversation);
+		console.log(saveConversation);
 		
 		const newMessage = new Message();
 		newMessage.conversationId = saveConversation._id;
@@ -85,11 +88,12 @@ exports.SendMessage = (req,res,next) => {
 
 		});
 		
-		if(req.body.senderRole == 'guide')
+		if(req.body.senderRole == 'guide'){
 			userModel = guideModel;
-    	else
-        userModel = touristModel;
-		
+		}
+    	else{
+        	userModel = touristModel;
+		}
 		const Profile1 = await userModel.update({
 			_id : req.user._id
 		},{
@@ -135,25 +139,26 @@ exports.SendMessage = (req,res,next) => {
 		}
 	})
 	
+}
 exports.MarkReceiverMessages = async(req,res,next) => {
-		//console.log(req.params);	
-		const {sender,receiver} = req.params,
+		// console.log("Here",req.params);	
+		const {sender,receiver} = req.params;
 		const msg = await Message.aggregate([
 		{$unwind : '$message'},
 		 {
 		 	$match: {
 		 		$and : [
-		 		{'message.sendername' : receiver, 'message.receivername' : sender}
+		 		{'message.sendername' : sender, 'message.receivername' : receiver}
 		 		]
 		 	}
 		 }
 		 ]);
-		//console.log(msg);
+		// console.log(msg);
 		if(msg.length > 0){
 			try {
 				msg.forEach(async (value) => {
 					await Message.update({
-						'message_id' : value.message._id
+						'message._id' : value.message._id
 					},
 					{$set: {'message.$.isRead' : true} }
 					);
@@ -165,8 +170,3 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 		}
 
 	}
-
-} 
-
-
-
