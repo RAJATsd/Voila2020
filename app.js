@@ -12,6 +12,7 @@ const authTouristRoutes = require('./routes/authTourist');
 const guideRoutes = require('./routes/guide');
 const touristRoutes = require('./routes/tourist');
 const messageRoutes = require('./routes/message');
+const commonRoutes = require('./routes/commonRoute');
 //require('dotenv').config();
 
 const SERVER_PORT = process.env.PORT || 3000;
@@ -71,6 +72,7 @@ app.use(authTouristRoutes);
 app.use(guideRoutes);
 app.use(touristRoutes);
 app.use(messageRoutes)
+app.use(commonRoutes);
 app.get('/',(req,res,next)=>{
     res.send(JSON.stringify({Hello:"Baby, welcome to my world"}));
 });
