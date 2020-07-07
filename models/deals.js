@@ -13,9 +13,7 @@ const dealSchema = new schema({
         required:true,
         ref:'tourGuide'
     },
-    favorites : [{
-        type:schema.Types.ObjectId
-    }],
+    favorites : [String],
     startDate : {
         type : Date,
         required:true
