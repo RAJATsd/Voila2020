@@ -1,29 +1,21 @@
-// //const express = require('express');
-// const mongoose = require('mongoose');
-// const dateModel = require('./models/testModel');
+const testMOdel = require('./models/testing');
+const mongoose = require('mongoose');
 
-// const a = ["cjaisidsa","hausdjasd","baiasdsasdhsa","oniasdba"];
+mongoose.connect('mongodb+srv://ekuicsd:icsd@cluster0-zy7nm.mongodb.net/voila',{useNewUrlParser:true})
+.then(result=>{
+    
 
-// mongoose.connect('mongodb://localhost:27017/testingDB',{useNewUrlParser:true})
-// .then(result=>{
-//     new dateModel({
-//         interests : a
-//     }).save()
-//     .then(result => {
-//         console.log(result);
-//     });
-// })
-// .catch(err=>{
-//     console.log(err);
-// });
-
-
-// // const app = express();
-
-// // const 
-
-
-// // app.listen(4848,()=>{
-// //     console.log(connected);
-// // });
-console.log(new Date().getTime());
+    const ntest = new testMOdel({
+        datings:'2020-09-17'
+    });
+    
+    ntest.save()
+    .then(result=>{
+        console.log(result);
+    })
+    .catch(er=>console.log(er));
+    
+})
+.catch(err=>{
+    console.log(err);
+});

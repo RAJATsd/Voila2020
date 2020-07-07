@@ -11,10 +11,13 @@ exports.getGuidesBySearch = async (req,res,next) => {
         //noOfPeople            
         const guides = await guideModel.find({city:city});
         const deals = await dealsModel.find({endDate:{$gte:startDate}}).populate('guideId');
-    
-        res.status(302).json({guides:guides,deals:deals});    
+        res.json({
+            guides:guides,
+            deals:deals
+        });    
     }
     catch(e){
+        console.log('Yha par b aa rha h');
         res.json({
             success:false,
             error:e
