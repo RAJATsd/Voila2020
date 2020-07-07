@@ -1,7 +1,7 @@
 const testMOdel = require('./models/testing');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://ekuicsd:icsd@cluster0-zy7nm.mongodb.net/voila',{useNewUrlParser:true})
+mongoose.connect(MONGOURI,{useNewUrlParser:true})
 .then(result=>{
     
 
