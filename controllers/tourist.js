@@ -105,7 +105,7 @@ exports.getDealAcceptance = async (req,res,next) => {
 
 exports.getSetAsFavorites = async (req,res,next) => {
     try{
-        const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{'favorites.favorite':req.user._id}});
+        const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{favorites:req.user._id}});
         res.status(200).json({message:"Added to favorites"});        
     }
     catch(e){
@@ -134,7 +134,7 @@ exports.myBookings = async (req,res,next) => {
 
 exports.myFavorites = async (req,res,next) => {
     try{
-        const deals = await dealsModel.find({'favorites.favorite':req.user._id}).populate('guideId');
+        const deals = await dealsModel.find({favorites:req.user._id}).populate('guideId');
         res.status(200).json({message:"These are your favorite deals",deals:deals});
     }
     catch(e){
