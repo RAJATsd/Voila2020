@@ -28,6 +28,7 @@ exports.postSignup = (req,res,next) => {
                         //interests : req.body.interests,
                         //languages : req.body.languages,
                         nationality:req.body.nationality,
+                        age:req.body.age
                     });    
                     newTourist.save()
                     .then(result =>{
@@ -98,7 +99,7 @@ exports.postLogin = async(req,res,next) => {
                         });
                     }
                     else{
-                        let interests=true,languages=true,age=true;
+                        let interests=true,languages=true;
                         if(!result.interests.length)
                         {
                             interests=false;
@@ -106,10 +107,6 @@ exports.postLogin = async(req,res,next) => {
                         if(!result.languages.length)
                         {
                             languages=false;
-                        }
-                        if(!result.age)
-                        {
-                            age=false
                         }
                         const token = jwt.sign({
                             email:email,
@@ -125,8 +122,7 @@ exports.postLogin = async(req,res,next) => {
                                 token:token,
                                 Tourist:result,
                                 interests,
-                                languages,
-                                age
+                                languages
                             });
                         })
                         .catch(errorWhileSave => {

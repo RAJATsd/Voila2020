@@ -19,7 +19,8 @@ const touristSchema = new schema({
         type: Number
     },
     age : {
-        type:Number
+        type:Number,
+        required:true
     },
     email : {
         required:true,

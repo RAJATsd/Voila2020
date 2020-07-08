@@ -184,15 +184,11 @@ exports.postInsertInterestAndLanguage = async(req,res,next)=>{
     try{
         const interests = req.body.interests||false;
         const languages = req.body.languages||false;
-        const age = req.body.age||false;
         if(interests){
             req.user.interests = interests;
         }
         if(languages){
             req.user.languages = languages;
-        }
-        if(age){
-            req.user.age = age;
         }
         req.user.save()
         .then(savedUser=>{
