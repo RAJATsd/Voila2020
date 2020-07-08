@@ -179,3 +179,42 @@ exports.specificGuideDeals = async (req,res,next) => {
         });
     }
 }
+
+exports.postInsertInterestAndLanguage = async(req,res,next)=>{
+    try{
+        const interests = req.body.interests||false;
+        const languages = req.body.languages||false;
+        const age = req.body.age||false;
+        if(interests){
+            req.user.interests = interests;
+        }
+        if(languages){
+            req.user.languages = languages;
+        }
+        if(age){
+            req.user.age = age;
+        }
+        req.user.save()
+        .then(savedUser=>{
+            res.json({
+                success:true,
+                message:"The Tourist Was Successfull Updated",
+                userDetails:savedUser
+            })
+        })
+        .catch(err=>{
+            console.log(err);
+            res.json({
+                success:false,
+                message:"INTERNAL SERVER ERROR"
+            });
+        })
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        });
+    }
+}

@@ -10,13 +10,16 @@ const touristSchema = new schema({
         required:true,
         type:String
     },
-    dob : {
-        require:true,
-        type : Date
-    },
+    // dob : {
+    //     require:true,
+    //     type : Date
+    // },
     phoneNumber : {
         required:true,
         type: Number
+    },
+    age : {
+        type:Number
     },
     email : {
         required:true,
@@ -33,14 +36,8 @@ const touristSchema = new schema({
         required : true,
         type : String
     },
-    interests : {
-        required:true,
-        type :Array
-    },
-    languages : {
-        required:true,
-        type:Array
-    },
+    interests : [String],
+    languages : [String],
     statusCurrent : {
         type : Boolean,
         default:true
@@ -55,8 +52,8 @@ const touristSchema = new schema({
             type : schema.Types.ObjectId, 
             ref:'Message'
         }
-    }
-],
+        }
+    ],
     tokens : [{
         token : {
             type:String

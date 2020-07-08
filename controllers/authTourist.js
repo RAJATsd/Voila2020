@@ -22,11 +22,11 @@ exports.postSignup = (req,res,next) => {
                         name : req.body.name,
                         gender : req.body.gender, 
                         password : hashed,
-                        dob : req.body.dob,
+                        //dob : req.body.dob,
                         phoneNumber : phoneNumber,
                         email : req.body.email,
-                        interests : req.body.interests,
-                        languages : req.body.languages,
+                        //interests : req.body.interests,
+                        //languages : req.body.languages,
                         nationality:req.body.nationality,
                     });    
                     newTourist.save()
@@ -98,6 +98,19 @@ exports.postLogin = async(req,res,next) => {
                         });
                     }
                     else{
+                        let interests=true,languages=true,age=true;
+                        if(!result.interests.length)
+                        {
+                            interests=false;
+                        }
+                        if(!result.languages.length)
+                        {
+                            languages=false;
+                        }
+                        if(!result.age)
+                        {
+                            age=false
+                        }
                         const token = jwt.sign({
                             email:email,
                             _id:result._id.toString()},
@@ -110,7 +123,10 @@ exports.postLogin = async(req,res,next) => {
                                 success:true,
                                 message:"Person successfully logged in",
                                 token:token,
-                                Tourist:result
+                                Tourist:result,
+                                interests,
+                                languages,
+                                age
                             });
                         })
                         .catch(errorWhileSave => {
