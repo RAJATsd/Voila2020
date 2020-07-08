@@ -98,7 +98,7 @@ exports.postLogin = async(req,res,next) => {
         .then(guide => {
             if(!guide)
             {
-                res.status(417).json({
+                res.json({
                     success:false,
                     message:"Email or Password incorrect ,please signup if you are a new guide"
                 });
@@ -108,7 +108,7 @@ exports.postLogin = async(req,res,next) => {
                 .then(matchingPassword => {
                     if(!matchingPassword)
                     {
-                        res.status(406).json({
+                        res.json({
                             success:false,
                             message:"Email or Password incorrect ,please signup if you are a new guide"
                         });
@@ -175,7 +175,7 @@ exports.getLogout = async (req,res,next) => {
     }
     catch(error){
         console.log(error);
-        res.status(500).json({
+        res.json({
             success:false,
             message:"INTERNAL SERVER ERROR"
         });
@@ -203,7 +203,7 @@ exports.getLogoutAll = (req,res,next) => {
     }
     catch(error)
     {
-        res.status(500).json({
+        res.json({
             success:false,
             message:"INTERNAL SERVER ERROR"
         });

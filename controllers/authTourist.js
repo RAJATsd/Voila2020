@@ -82,7 +82,7 @@ exports.postLogin = async(req,res,next) => {
         .then(result => {
             if(!result)
             {
-                res.status(417).json({
+                res.json({
                     success:false,
                     message:"No such Tourist exist,please signup if you are a new Tourist"
                 });
@@ -92,7 +92,7 @@ exports.postLogin = async(req,res,next) => {
                 .then(matchingPassword => {
                     if(!matchingPassword)
                     {
-                        res.status(406).json({
+                        res.json({
                             success:false,
                             message:"Email or Password do not match, please try again"
                         });
@@ -162,7 +162,7 @@ exports.getLogout = async (req,res,next) => {
     }
     catch(error) {
         console.log(error)
-        res.status(500).json({
+        res.json({
             success:false,
             message:"INTERNAL SERVER ERROR"
         });
