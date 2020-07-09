@@ -5,7 +5,12 @@ const jwt = require('jsonwebtoken');
 exports.postSignup = (req,res,next) => {
     try{
         const phoneNumber = req.body.phoneNumber;
-        Tourist.findOne({phoneNumber:phoneNumber})
+        Tourist.findOne({$or:
+            [
+                {phoneNumber:phoneNumber},
+                {email:req.body.email}
+            ]
+        })
         .then(result => {
             if(result)
             {
