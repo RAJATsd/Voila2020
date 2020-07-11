@@ -116,8 +116,7 @@ exports.postLogin = async(req,res,next) => {
                         const token = jwt.sign({
                             email:email,
                             _id:result._id.toString()},
-                            'thisismysecretkeyforthishackathon2020',
-                            {expiresIn:'5h'});
+                            'thisismysecretkeyforthishackathon2020');
                         result.tokens = result.tokens.concat({token});
                         result.save()
                         .then(saved => {

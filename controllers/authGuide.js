@@ -114,7 +114,7 @@ exports.postLogin = async(req,res,next) => {
                         });
                     }
                     else{
-                        const token = jwt.sign({email:email,_id:guide._id.toString()},'thisismysecretkeyforthishackathon2020',{expiresIn:'5h'});
+                        const token = jwt.sign({email:email,_id:guide._id.toString()},'thisismysecretkeyforthishackathon2020');
                         guide.tokens = guide.tokens.concat({token});
                         guide.save()
                         .then(saved => {
