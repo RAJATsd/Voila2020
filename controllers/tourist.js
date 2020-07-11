@@ -8,16 +8,17 @@ exports.getGuidesBySearch = async (req,res,next) => {
         const city = req.body.city;
         const startDate = req.body.startDate;
         const endDate = req.body.endDate;
-        //noOfPeople            
+        const noOfPeople = req.body.noOfPeople;           
         const guides = await guideModel.find({city:city});
-        const deals = await dealsModel.find({endDate:{$gte:startDate}}).populate('guideId');
+        const deals = await dealsModel.find({endDate:{$gte:startDate},peopleLeft:{$gte:noOfPeople}}).populate('guideId');
         res.json({
+            success:true,
             guides:guides,
             deals:deals
         });    
     }
     catch(e){
-        console.log('Yha par b aa rha h');
+        console.log(e);
         res.json({
             success:false,
             error:e
@@ -70,32 +71,61 @@ exports.getSelectGuide = async (req,res,next) => {
 
 exports.getDealAcceptance = async (req,res,next) => {
     try{
-        const dealArray = await dealsModel.find({_id:req.params.dealId});
-        const deal = dealArray[0];
-        const newBooking = new bookingsModel({
-            guideId : deal.guideId,
-            touristId : req.user._id,
-            price : deal.price,
-            places : deal.places,
-            startDate : deal.startDate,
-            endDate : deal.endDate,
-            status : 'APPROVED',
-            noOfPeople : req.body.noOfPeople,
-            groupType : req.body.groupType,
-            duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
-            tourType : 'deal'
-        });
-        newBooking.save()
-        .then(booking=>{
-            res.status(201).json({message : "Booking created successfully", booking:booking});
-        })
-        .catch(error => {
-            console.log(error);
-            res.json({
-                success:false,
-                error:error
+        const existingBooking = await bookingsModel.findOne({dealId:req.params.dealId});
+        const deal = await dealsModel.findOne({_id:req.params.dealId});
+        if(!existingBooking){
+            const newBooking = new bookingsModel({
+                guideId : deal.guideId,
+                dealId : req.params.dealId,
+                touristId : [req.user._id],
+                price : deal.price,
+                places : deal.places,
+                startDate : deal.startDate,
+                endDate : deal.endDate,
+                status : 'APPROVED',
+                noOfPeople : req.body.noOfPeople,
+                groupType : req.body.groupType,
+                duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
+                tourType : 'deal'
+            });
+            newBooking.save()
+            .then(booking=>{
+                res.status(201).json({
+                    success:true,
+                    message : "Booking created successfully", 
+                    booking:booking
+                });
             })
-        });
+            .catch(error => {
+                console.log(error);
+                res.json({
+                    success:false,
+                    error:"INTERNAL SERVER ERROR"
+                })
+            });
+        }
+        else{
+            existingBooking.touristId.push(req.user._id);
+            existingBooking.save()
+            .then(savedRes=>{
+                res.status(201).json({
+                    success:true,
+                    message : "Booking created successfully", 
+                    booking:savedRes
+                });
+            })
+            .catch(err=>{
+                console.log(err);
+                res.json({
+                    success:false,
+                    message:"INTERNAL SERVER ERROR"
+                });
+            })
+        }
+        deal.peopleLeft = deal.peopleLeft - req.body.noOfPeople;
+        deal.save()
+        .then(result => console.log('Deal Updated'))
+        .catch(err=>console.log(err));
     }
     catch(e){
         console.log(e);

@@ -8,11 +8,15 @@ const bookingSchema = new schema({
         type:schema.Types.ObjectId,
         ref:'tourGuide'
     },
-    touristId : {
+    dealId : {
+        type:schema.Types.ObjectId,
+        ref:'deal'
+    },
+    touristId : [{
         required:true,
         type:schema.Types.ObjectId,
         ref:'tourist'
-    },
+    }],
     bookingDate : {
         default: new Date().toJSON().slice(0,10),
         type:Date

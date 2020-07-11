@@ -36,6 +36,14 @@ const dealSchema = new schema({
     peopleLimit: {
         type : Number,
         required : true
+    },
+    groupType:{
+        type:String,
+        required:true
+    },
+    peopleLeft :{
+        type : Number,
+        required:true
     }
 });
 

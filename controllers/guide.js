@@ -13,7 +13,9 @@ exports.addDeal = (req,res,next) => {
             endDate : req.body.endDate,
             city : req.body.city,
             state:req.body.state,
-            peopleLimit:req.body.peopleLimit
+            peopleLimit:req.body.peopleLimit,
+            groupType:req.body.groupType,
+            peopleLeft:req.body.peopleLimit
         });
         newDeal.save()
         .then(deal => {
@@ -53,7 +55,7 @@ exports.showDeal = async (req,res,next) => {
 exports.showOffers = async (req,res,next) => {
     try{
         const status = req.params.status;
-        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).populate('touristId');
+        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).sort({startDate:-1}).populate('touristId');
         res.status(200).json({message:"found these offers",bookings:Bookings});
     }
     catch(e){

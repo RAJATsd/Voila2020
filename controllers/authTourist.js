@@ -16,7 +16,7 @@ exports.postSignup = (req,res,next) => {
             {
                 res.json({
                     success:false,
-                    message:"Guide Already Exist. Please login"
+                    message:"Tourist Already Exist. Please login"
                 });
             }
             else{
