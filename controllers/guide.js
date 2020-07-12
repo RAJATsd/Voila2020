@@ -55,7 +55,7 @@ exports.showDeal = async (req,res,next) => {
 exports.showOffers = async (req,res,next) => {
     try{
         const status = req.params.status;
-        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).sort({startDate:-1}).populate('touristId');
+        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).sort({startDate:1}).populate('touristId');
         res.status(200).json({message:"found these offers",bookings:Bookings});
     }
     catch(e){
