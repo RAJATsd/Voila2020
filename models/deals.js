@@ -5,8 +5,8 @@ const schema = mongoose.Schema;
 const dealSchema = new schema({
     places : [
         {
-            place:String,
-            date:Date
+            place:{type:String},
+            date:{type:Date}
         }
     ],
     price : {
