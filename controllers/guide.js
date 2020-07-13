@@ -2,6 +2,8 @@ const dealModel = require('../models/deals');
 const bookingModel = require('../models/bookings');
 const updationMiddleware = require('../middleware/scheduleFunc');
 const Guide = require('../models/tourGuide');
+const messages = require('../models/messages');
+
 
 exports.addDeal = (req,res,next) => {
     try{
@@ -106,3 +108,29 @@ exports.editProfile = async (req,res,next) => {
   }
 }
 
+exports.showList = async(req, res, next) => {
+    try {
+        let glbl = [];
+        const guide = await Guide.findById({
+            _id: req.params.id
+        });
+
+        for(chat of guide.chatList)
+        {
+            
+            const msg = await messages.findById(chat.msgId);
+            const len = msg.message.length;
+            const list = msg.message[len - 1];
+            glbl.push(list);
+            
+        }          
+        
+          res.status(200).json({message: "list has been retireved",glbl:glbl});
+    } catch (e) {
+        console.log(e);
+        res.json({
+            success: false,
+            error: e
+        });
+    }
+}
