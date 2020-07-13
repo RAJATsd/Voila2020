@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const dealSchema = new schema({
-    places : [{type : String}],
+    places : [
+        {
+            place:{type:String},
+            date:{type:Date}
+        }
+    ],
     price : {
         type : Number,
         required:true
