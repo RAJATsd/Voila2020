@@ -182,8 +182,18 @@ exports.myFavorites = async (req,res,next) => {
 exports.editRequest = async (req,res,next) => {
     try{
         const change = req.params.change;
-        const request = req.params.bookingId;
-        await bookingsModel.findByIdAndUpdate({_id:request},{status:change});
+        const changes = {};
+        if(change === 'CANCELLED'){
+            changes.cancelDate=new Date().toJSON().slice(0,10);
+            changes.cancelReason = req.body.cancelReason;
+        }
+        if(change === 'COMPLETED'){
+            changes.rating = req.body.rating;
+            changes.review = req.body.review;
+        }
+        changes.status = change;
+        const bookingId = req.params.bookingId;
+        await bookingsModel.findByIdAndUpdate({_id:bookingId},changes);
         res.status(200).json({message:"Booking updated successfully"});
     }
     catch(e){

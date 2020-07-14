@@ -10,7 +10,7 @@ router.post('/guide/deals/add',auth,guideController.addDeal);
 //requirements: all the fields in the deals schema except guideId and favorites
 
 router.get('/guide/deals',auth,guideController.showDeal);
-//lists all the of the particular guide
+//lists all the deals of the particular guide
 //requirements : nothing
 router.get('/guide/offers/:status',auth,guideController.showOffers);
 //shows the request sent to the guide by tourist
