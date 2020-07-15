@@ -42,5 +42,7 @@ router.put('/tourist/profile/changePassword',auth,commonController.changePasswor
 router.put('/tourist/editBooking/:bookingId/:change',auth,touristController.editRequest);
 // edits the specific booking according to the change
 // requirements : bookingId and change in params
-
+router.get('/tourist/messages/:id/',touristController.showList);
+//gets list of tourist chat with his/her tour guide
+//requirements : touristId in params
 module.exports = router;
