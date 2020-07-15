@@ -89,12 +89,14 @@ exports.SendMessage = (req,res,next) => {
 		});
 		
 		if(req.body.senderRole == 'guide'){
-			userModel = guideModel;
+			senderModel = guideModel;
+			receiverModel = touristModel; 
 		}
     	else{
-        	userModel = touristModel;
+        	senderModel = touristModel;
+			receiverModel = guideModel;
 		}
-		const Profile1 = await userModel.update({
+		const Profile1 = await senderModel.update({
 			_id : req.user._id
 		},{
 			$push: {
@@ -111,7 +113,7 @@ exports.SendMessage = (req,res,next) => {
 			}
 		})
 	//	console.log(Profile1);
-		const Profile2 = await userModel.update({
+		const Profile2 = await receiverModel.update({
 			_id : req.params.receiver_Id
 		},{
 			$push: {
