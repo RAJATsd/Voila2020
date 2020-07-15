@@ -64,8 +64,15 @@ const bookingSchema = new schema({
         type:String,
         default:'personalized'
     },
+    cancelDate:{
+        type:Date
+    },
+    cancelReason:{
+        type:String
+    },
     duration : {type:Number}
 });
 
 module.exports = mongoose.model('booking',bookingSchema);
 
+//cancelDate,cancelReason,CANCELLED,NOREPLY

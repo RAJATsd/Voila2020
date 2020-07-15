@@ -28,9 +28,6 @@ router.get('/tourist/bookings/:status',auth,touristController.myBookings);
 //requirements: status of the booking in params
 router.get('/tourist/favoriteDeals',auth,touristController.myFavorites);
 //sends the list of favorite deals of the user
-router.get('/tourist/editBooking/:bookingId/:change',auth,touristController.editRequest);
-// edits the specific booking according to the change
-// requirements : bookingId and change in params
 router.get('/tourist/deals/guide/:guideId',touristController.specificGuideDeals);
 //sends the deals of a specific guide
 //requirements : guide id of the specific guide
@@ -42,5 +39,8 @@ router.put('/tourist/profile/changePassword',auth,commonController.changePasswor
 //changes the password
 //requirements : New password in the field newPassword as the key name
 // router.get('/getUserByEmail/:role/:email',auth,commonController.getUserByEmail);
+router.put('/tourist/editBooking/:bookingId/:change',auth,touristController.editRequest);
+// edits the specific booking according to the change
+// requirements : bookingId and change in params
 
 module.exports = router;
