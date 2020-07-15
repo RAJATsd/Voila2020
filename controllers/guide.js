@@ -3,7 +3,7 @@ const bookingModel = require('../models/bookings');
 const updationMiddleware = require('../middleware/scheduleFunc');
 const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
-
+const Tourist = require('../models/tourist');
 
 exports.addDeal = (req,res,next) => {
     try{
@@ -118,9 +118,15 @@ exports.showList = async(req, res, next) => {
         for(chat of guide.chatList)
         {
             
-            const msg = await messages.findById(chat.msgId);
+            const msg = await messages.findById(chat.msgId).lean();
+            const user = await Tourist.findById(chat.receiverId);
             const len = msg.message.length;
             const list = msg.message[len - 1];
+            list["userName"] =  user.name;
+            list["userEmail"] =  user.email;
+            
+            console.log(list);
+
             glbl.push(list);
             
         }          
