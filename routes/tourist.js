@@ -3,6 +3,7 @@ const commonController = require('../controllers/common');
 const touristController = require('../controllers/tourist');
 const auth = require('../middleware/touristAuth');
 
+
 const router = express.Router();
 
 router.post('/tourist/guides',touristController.getGuidesBySearch);
@@ -45,7 +46,6 @@ router.put('/tourist/editBooking/:bookingId/:change',auth,touristController.edit
 router.get('/getUserByEmail/:role/:email',commonController.getUserByEmail);
 //gets user with provided email
 //requirements : email and role in params
-router.get('/tourist/messages/:id/',auth,touristController.showList);
-//gets list of tourist chat with his/her tour guide
-//requirements : touristId in params
+
+
 module.exports = router;
