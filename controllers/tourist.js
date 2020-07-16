@@ -1,6 +1,9 @@
 const guideModel = require('../models/tourGuide');
 const dealsModel = require('../models/deals');
 const bookingsModel = require('../models/bookings');
+const Guide = require('../models/tourGuide');
+const messages = require('../models/messages');
+const Tourist = require('../models/tourist');
 
 
 exports.getGuidesBySearch = async (req,res,next) => {
@@ -284,6 +287,39 @@ exports.postInsertInterestAndLanguage = async(req,res,next)=>{
         res.json({
             success:false,
             message:"INTERNAL SERVER ERROR"
+        });
+    }
+}
+
+exports.showList = async(req, res, next) => {
+    try {
+        let glbl = [];
+        const guide = await Tourist.findById({
+            _id: req.params.id
+        });
+
+        for(chat of guide.chatList)
+        {
+            
+            const msg = await messages.findById(chat.msgId).lean();
+            const user = await Guide.findById(chat.receiverId);
+            const len = msg.message.length;
+            const list = msg.message[len - 1];
+            list["userName"] =  user.name;
+            list["userEmail"] =  user.email;
+            
+            console.log(list);
+
+            glbl.push(list);
+            
+        }          
+        
+          res.status(200).json({message: "list has been retireved",glbl:glbl});
+    } catch (e) {
+        console.log(e);
+        res.json({
+            success: false,
+            error: e
         });
     }
 }

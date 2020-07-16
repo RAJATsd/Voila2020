@@ -42,6 +42,7 @@ exports.editProfile = async (req,res,next) => {
 }
 
 exports.getUserByEmail = async (req,res,next) => {
+    try{
     let userModel;
     if(req.params.role == 'guide')
         userModel = guideModel;
@@ -49,4 +50,12 @@ exports.getUserByEmail = async (req,res,next) => {
         userModel = touristModel;
     const profile = await userModel.findOne({email:req.params.email});
     res.status(200).json({message:"The is the desired profile",profile:profile});
+}
+catch (e) {
+        console.log(e);
+        res.json({
+            success: false,
+            error: e
+        });
+    }
 }
