@@ -42,7 +42,7 @@ router.put('/tourist/profile/changePassword',auth,commonController.changePasswor
 router.put('/tourist/editBooking/:bookingId/:change',auth,touristController.editRequest);
 // edits the specific booking according to the change
 // requirements : bookingId and change in params
-router.get('/getUserByEmail/:role/:email',auth,commonController.getUserByEmail);
+router.get('/getUserByEmail/:role/:email',commonController.getUserByEmail);
 //gets user with provided email
 //requirements : email and role in params
 router.get('/tourist/messages/:id/',auth,touristController.showList);
