@@ -8,9 +8,42 @@ exports.getGuidesBySearch = async (req,res,next) => {
         const city = req.body.city;
         const startDate = req.body.startDate;
         const endDate = req.body.endDate;
-        const noOfPeople = req.body.noOfPeople;           
-        const guides = await guideModel.find({city:city});
-        const deals = await dealsModel.find({endDate:{$gte:startDate},peopleLeft:{$gte:noOfPeople}}).populate('guideId');
+        const noOfPeople = req.body.noOfPeople;
+        let guides = [];
+        let {minPrice,maxPrice} = req.body.extra_filter;
+        if(req.body.filters===false){
+            guides = await guideModel.find({
+                city:city,
+                perHeadCharge:{$gte:minPrice,$lte:maxPrice}
+            });    
+        }
+        else{
+            const filters = req.body.extra_filter;
+            const {rating,interests,languages} = filters;
+            const objFilter = {};
+            if(rating!=null){
+                objFilter.rating={$gte:rating};
+            }
+            if(interests.length !=0){
+                objFilter.interests={$in:interests};
+            }
+            if(languages.length!=0){
+                objFilter.languages={$in:languages}
+            };      
+            guides = await guideModel.find({
+                city:city,
+                perHeadCharge:{$gte:minPrice,$lte:maxPrice},
+                ...objFilter
+            });
+            console.log(objFilter);
+        }
+        const deals = await dealsModel.find({
+            city:city,
+            endDate:{$gte:startDate},
+            peopleLeft:{$gte:noOfPeople}
+        })
+        .populate('guideId');
+
         res.json({
             success:true,
             guides:guides,
