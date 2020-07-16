@@ -31,7 +31,7 @@ router.put('/guide/profile/changePassword',auth,commonController.changePassword)
 router.get('/getUserByEmail/:role/:email',auth,commonController.getUserByEmail);
 //gets user with provided email
 //requirements : email and role in params
-router.get('/guide/messages/:id/',guideController.showList);
+router.get('/guide/messages/:id/',auth,guideController.showList);
 //gets list of tour guide chat with his/her tourists
 //requirements : guideId in params
 module.exports = router;
