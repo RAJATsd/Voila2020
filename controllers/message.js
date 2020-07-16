@@ -4,7 +4,9 @@ const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
 
 exports.GetAllMessages = async(req,res,next) => {
+	
 	const {sender_Id,receiver_Id} = req.params;
+	
 	const conversation = await Conversation.findOne({
 		$or:[
 		{
@@ -20,7 +22,7 @@ exports.GetAllMessages = async(req,res,next) => {
 		}
 	]
 	}).select('_id');
-
+		
 	if (conversation){
 		const msg = await Message.findOne({
 			conversationId : conversation._id
