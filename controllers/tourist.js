@@ -143,6 +143,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 price : deal.price,
                 places : deal.places,
                 startDate : deal.startDate,
+                groupType : deal.groupType,
                 endDate : deal.endDate,
                 status : 'APPROVED',
                 noOfPeople : req.body.noOfPeople,
