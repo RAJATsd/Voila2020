@@ -161,7 +161,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 console.log(error);
                 res.json({
                     success:false,
-                    error:"INTERNAL SERVER ERROR"
+                    error:error
                 })
             });
         }
@@ -179,7 +179,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 console.log(err);
                 res.json({
                     success:false,
-                    message:"INTERNAL SERVER ERROR"
+                    message:err
                 });
             })
         }
