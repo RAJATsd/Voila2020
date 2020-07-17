@@ -48,6 +48,8 @@ router.put('/tourist/editBooking/:bookingId/:change',auth,touristController.edit
 router.get('/getUserByEmail/:role/:email',commonController.getUserByEmail);
 //gets user with provided email
 //requirements : email and role in params
-
+router.get('/tourist/messages/:id/',auth,touristController.showList);
+//gets list of tour guide chat with his/her tourists
+//requirements : guideId in params
 
 module.exports = router;

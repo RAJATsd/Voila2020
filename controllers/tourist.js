@@ -310,11 +310,11 @@ exports.postInsertInterestAndLanguage = async(req,res,next)=>{
 exports.showList = async(req, res, next) => {
     try {
         let glbl = [];
-        const guide = await Tourist.findById({
+        const tourist = await Tourist.findById({
             _id: req.params.id
         });
 
-        for(chat of guide.chatList)
+        for(chat of tourist.chatList)
         {
             
             const msg = await messages.findById(chat.msgId).lean();
