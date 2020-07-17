@@ -98,7 +98,7 @@ const tourGuideSchema = new schema({
     },
     profileStatus : {
         type : String,
-        default:'pending'
+        default:'PENDING'
     },
     chatList : [
     {

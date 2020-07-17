@@ -4,6 +4,7 @@ const updationMiddleware = require('../middleware/scheduleFunc');
 const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
+const answerModel = require('../models/answers');
 
 exports.addDeal = (req,res,next) => {
     try{
@@ -138,5 +139,37 @@ exports.showList = async(req, res, next) => {
             success: false,
             error: e
         });
+    }
+}
+
+exports.fillAnswers = async(req,res,next) => {
+    try{
+        const newAnswer = new answerModel({
+            guideId:req.user._id,
+            answerOne:req.body.answerOne,
+            answerTwo:req.body.answerTwo,
+            answerThree:req.body.answerThree
+        });
+        newAnswer.save()
+        .then(savedAnswer=>{
+            res.json({
+                success:true,
+                answers:savedAnswer
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+            res.json({
+                success:false,
+                message:"ERROR WHILE ADDING ANSWERS"
+            })
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
     }
 }

@@ -7,6 +7,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const adminRoutes = require('./routes/admin');
+const authAdminRoutes = require('./routes/authAdmin');
 const authGuideRoutes = require('./routes/authGuide');
 const authTouristRoutes = require('./routes/authTourist');
 const guideRoutes = require('./routes/guide');
@@ -73,6 +74,7 @@ app.use(guideRoutes);
 app.use(touristRoutes);
 app.use(messageRoutes)
 app.use(commonRoutes);
+app.use(authAdminRoutes);
 app.get('/',(req,res,next)=>{
     res.send(JSON.stringify({Hello:"Baby, welcome to my world"}));
 });
