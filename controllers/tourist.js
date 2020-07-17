@@ -5,6 +5,22 @@ const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
 
+exports.getCheck = async(req,res,next) => {
+    try{
+        const guides = await guideModel.aggregate().lookup({
+            from:'booking',
+            localField:"_id",
+            foreignField:'guideId',
+            as:'additionals'
+        });
+        console.log(guides)
+        res.json({guide:guides});
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 
 exports.getGuidesBySearch = async (req,res,next) => {
     try{
@@ -69,7 +85,7 @@ exports.getSelectGuide = async (req,res,next) => {
             touristId : req.user._id,
             price : req.body.price,
             noOfPeople : req.body.noOfPeople,
-            places : req.body.places,
+            //places : req.body.places,
             startDate : req.body.startDate,
             endDate : req.body.endDate,
             groupType : req.body.groupType,
@@ -120,7 +136,6 @@ exports.getDealAcceptance = async (req,res,next) => {
                 endDate : deal.endDate,
                 status : 'APPROVED',
                 noOfPeople : req.body.noOfPeople,
-                groupType : req.body.groupType,
                 duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
                 tourType : 'deal'
             });
@@ -245,7 +260,8 @@ exports.specificGuideDeals = async (req,res,next) => {
     try{
         const guideId = req.params.guideId;
         const deals = await dealsModel.find({guideId:guideId}).populate('favorites');
-        res.status(200).json({message:"Deals of this tour guide",deals:deals});    
+        const guide = await guideModel.findById({_id:guideId});
+        res.status(200).json({message:"Deals of this tour guide",guide,deals:deals});    
     }
     catch(e){
         console.log(e);

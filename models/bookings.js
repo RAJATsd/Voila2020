@@ -57,7 +57,7 @@ const bookingSchema = new schema({
     places : [
         {
             type:String,
-            required:true
+            //required:true
         }
     ],
     tourType : {
