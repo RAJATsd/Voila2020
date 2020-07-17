@@ -200,13 +200,33 @@ exports.getDealAcceptance = async (req,res,next) => {
 exports.getSetAsFavorites = async (req,res,next) => {
     try{
         const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{favorites:req.user._id}});
-        res.status(200).json({message:"Added to favorites"});        
+        res.status(200).json({
+            success:true,
+            message:"Added to favorites"
+        });        
     }
     catch(e){
         console.log(e);
         res.json({
             success:false,
             error:e
+        });
+    }
+}
+
+exports.removeFromFavorites = async (req,res,next) => {
+    try{
+        await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$pull:{favorites:req.user._id}});
+        res.json({
+            success:true,
+            message:'REMOVED FROM FAVORITES'
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
         });
     }
 }
