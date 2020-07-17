@@ -7,14 +7,18 @@ const Tourist = require('../models/tourist');
 
 exports.getCheck = async(req,res,next) => {
     try{
-        const guides = await guideModel.aggregate().lookup({
-            from:'booking',
-            localField:"_id",
-            foreignField:'guideId',
-            as:'additionals'
-        });
-        console.log(guides)
-        res.json({guide:guides});
+        const guides = await guideModel.find({city:'Panipat'}).lean();
+        if(guides.length > 0){
+            for(singleGuide of guides){
+                const reviews = await bookingsModel.find({guideId:singleGuide._id});
+                console.log(singleGuide)
+                singleGuide['reviewAndRating'] = reviews;
+            }
+        }
+        res.json({
+            success:true,
+            guides:guides
+        })
     }
     catch(e){
         console.log(e)
@@ -34,7 +38,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
             guides = await guideModel.find({
                 city:city,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice}
-            });    
+            }).lean();
         }
         else{
             const filters = req.body.extra_filter;
@@ -53,8 +57,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
                 city:city,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice},
                 ...objFilter
-            });
-            console.log(objFilter);
+            }).lean();
         }
         const deals = await dealsModel.find({
             city:city,
@@ -62,6 +65,13 @@ exports.getGuidesBySearch = async (req,res,next) => {
             peopleLeft:{$gte:noOfPeople}
         })
         .populate('guideId');
+
+        if(guides.length > 0){
+            for(singleGuide of guides){
+                const reviews = await bookingsModel.find({guideId:singleGuide._id,status:'COMPLETED'});
+                singleGuide.reviewAndRating = reviews;
+            }
+        }
 
         res.json({
             success:true,
