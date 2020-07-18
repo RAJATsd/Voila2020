@@ -2,6 +2,8 @@ const Message = require('../models/messages');
 const Conversation = require('../models/conversation');
 const guideModel = require('../models/tourGuide');
 const touristModel = require('../models/tourist');
+const room = require('../models/room');
+
 
 exports.GetAllMessages = async(req,res,next) => {
 	
@@ -174,3 +176,25 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 		}
 
 	}
+
+exports.createRoom = (req,res,next) => {
+	
+	const newRoom = new room({
+	guideId : req.params.guideId,
+	dealId : req.params.dealId,
+	name : req.body.name,
+	people: 1
+	});
+	newRoom.save()
+	.then(room => {
+	console.log(room);
+	res.status(201).json({message:"New Room Created",room:room});	
+	})
+	.catch(error => {
+            console.log(error);
+            res.json({
+                success : false,
+                error : error
+            });
+        });
+}
