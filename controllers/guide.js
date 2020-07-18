@@ -22,7 +22,10 @@ exports.addDeal = (req,res,next) => {
         });
         newDeal.save()
         .then(deal => {
-            res.status(201).json({message:"New Deal Created",deal:deal});
+            res.status(201).json({
+                message:"New Deal Created",
+                deal:deal
+            });
         })
         .catch(error => {
             console.log(error);

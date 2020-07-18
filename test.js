@@ -31,7 +31,7 @@
 // .catch(err=>{
 //     console.log(err);
 // });
+// var a=['asd','bue','he'];
+// a[100]= 'asd';
+// console.log(a.length);
 
-
-let date = '2020-07-17';
-console.log(new Date(date).getFullYear());
