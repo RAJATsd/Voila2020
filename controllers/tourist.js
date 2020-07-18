@@ -5,6 +5,26 @@ const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
 
+exports.getCheck = async(req,res,next) => {
+    try{
+        const guides = await guideModel.find({city:'Panipat'}).lean();
+        if(guides.length > 0){
+            for(singleGuide of guides){
+                const reviews = await bookingsModel.find({guideId:singleGuide._id});
+                console.log(singleGuide)
+                singleGuide['reviewAndRating'] = reviews;
+            }
+        }
+        res.json({
+            success:true,
+            guides:guides
+        })
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
 
 exports.getGuidesBySearch = async (req,res,next) => {
     try{
@@ -18,7 +38,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
             guides = await guideModel.find({
                 city:city,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice}
-            });    
+            }).lean();
         }
         else{
             const filters = req.body.extra_filter;
@@ -37,8 +57,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
                 city:city,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice},
                 ...objFilter
-            });
-            console.log(objFilter);
+            }).lean();
         }
         const deals = await dealsModel.find({
             city:city,
@@ -46,6 +65,13 @@ exports.getGuidesBySearch = async (req,res,next) => {
             peopleLeft:{$gte:noOfPeople}
         })
         .populate('guideId');
+
+        if(guides.length > 0){
+            for(singleGuide of guides){
+                const reviews = await bookingsModel.find({guideId:singleGuide._id,status:'COMPLETED'});
+                singleGuide.reviewAndRating = reviews;
+            }
+        }
 
         res.json({
             success:true,
@@ -69,7 +95,7 @@ exports.getSelectGuide = async (req,res,next) => {
             touristId : req.user._id,
             price : req.body.price,
             noOfPeople : req.body.noOfPeople,
-            places : req.body.places,
+            //places : req.body.places,
             startDate : req.body.startDate,
             endDate : req.body.endDate,
             groupType : req.body.groupType,
@@ -117,10 +143,10 @@ exports.getDealAcceptance = async (req,res,next) => {
                 price : deal.price,
                 places : deal.places,
                 startDate : deal.startDate,
+                groupType : deal.groupType,
                 endDate : deal.endDate,
                 status : 'APPROVED',
                 noOfPeople : req.body.noOfPeople,
-                groupType : req.body.groupType,
                 duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
                 tourType : 'deal'
             });
@@ -136,7 +162,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 console.log(error);
                 res.json({
                     success:false,
-                    error:"INTERNAL SERVER ERROR"
+                    error:error
                 })
             });
         }
@@ -154,7 +180,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 console.log(err);
                 res.json({
                     success:false,
-                    message:"INTERNAL SERVER ERROR"
+                    message:err
                 });
             })
         }
@@ -175,13 +201,33 @@ exports.getDealAcceptance = async (req,res,next) => {
 exports.getSetAsFavorites = async (req,res,next) => {
     try{
         const addToFav = await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$push:{favorites:req.user._id}});
-        res.status(200).json({message:"Added to favorites"});        
+        res.status(200).json({
+            success:true,
+            message:"Added to favorites"
+        });        
     }
     catch(e){
         console.log(e);
         res.json({
             success:false,
             error:e
+        });
+    }
+}
+
+exports.removeFromFavorites = async (req,res,next) => {
+    try{
+        await dealsModel.findOneAndUpdate({_id:req.params.dealId},{$pull:{favorites:req.user._id}});
+        res.json({
+            success:true,
+            message:'REMOVED FROM FAVORITES'
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
         });
     }
 }
@@ -245,7 +291,8 @@ exports.specificGuideDeals = async (req,res,next) => {
     try{
         const guideId = req.params.guideId;
         const deals = await dealsModel.find({guideId:guideId}).populate('favorites');
-        res.status(200).json({message:"Deals of this tour guide",deals:deals});    
+        const guide = await guideModel.findById({_id:guideId});
+        res.status(200).json({message:"Deals of this tour guide",guide,deals:deals});    
     }
     catch(e){
         console.log(e);

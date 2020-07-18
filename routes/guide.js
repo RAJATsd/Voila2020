@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/guide/deals/add',auth,guideController.addDeal);
 //adds deal for the guide
 //requirements: all the fields in the deals schema except guideId and favorites
+router.post('/guide/fillAnswers',auth,guideController.fillAnswers)
 
 router.get('/guide/deals',auth,guideController.showDeal);
 //lists all the deals of the particular guide

@@ -18,9 +18,12 @@ router.post('/tourist/guides/deals/:dealId',auth,touristController.getDealAccept
 //requirements : _id of deal as param, everything in the bookings model except guideId, touristId,price,rating,review,reviewDate and status
 router.post('/tourist/updateInterestAndLang',auth,touristController.postInsertInterestAndLanguage);
 
+
+router.get('/testing',touristController.getCheck);
 router.get('/tourist/deals/fav/:dealId',auth,touristController.getSetAsFavorites);
 //for adding a deal to favorites
 //requirements : _id of the deal as the param
+router.get('/tourist/deals/removeFav/:dealId',auth,touristController.removeFromFavorites);
 router.get('/tourist/myProfile',auth,commonController.myProfile);
 //send the profile of tourist
 //requirements: nothing
