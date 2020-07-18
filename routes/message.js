@@ -18,10 +18,10 @@ router.get('/tourist/chat-messages/:sender_Id/:receiver_Id',auth1,MessageCtrl.Ge
 //gets list of tourist chat with a specific guide
 //requirements : sendar and receiver id in params
 
-router.post('/guide/chat-messages/:sender_Id/:receiver_Id',auth,MessageCtrl.SendMessage)
+router.post('/guide/chat-messages/:sender_Id/:receiver_Id',auth,MessageCtrl.SendMessage);
 
-router.post('/tourist/chat-messages/:sender_Id/:receiver_Id',auth1,MessageCtrl.SendMessage)
+router.post('/tourist/chat-messages/:sender_Id/:receiver_Id',auth1,MessageCtrl.SendMessage);
 
-
+router.post('/createRoom/:guideId/:dealId',auth,MessageCtrl.createRoom);
 
 module.exports = router;
