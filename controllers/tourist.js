@@ -4,6 +4,7 @@ const bookingsModel = require('../models/bookings');
 const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
+const roomModel = require('../models/room');
 
 exports.getCheck = async(req,res,next) => {
     try{
@@ -235,7 +236,16 @@ exports.removeFromFavorites = async (req,res,next) => {
 exports.myBookings = async (req,res,next) => {
     try{
         const status = req.params.status;
-        const bookings = await bookingsModel.find({touristId:req.user._id,status:status}).populate('guideId');
+        const bookings = await bookingsModel.find({touristId:req.user._id,status:status}).populate('guideId').lean();
+        if(status==='APPROVED'){
+            for(singleBooking of bookings)
+            {
+                if(singleBooking.dealId){
+                    const fetchedRoom = await roomModel.findOne({dealId:singleBooking.dealId});
+                    singleBooking.roomDetails = fetchedRoom;
+                }
+            }
+        }
         res.status(200).json({message:"These are the bookings found",bookings:bookings});
     }
     catch(e){
