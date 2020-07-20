@@ -106,7 +106,8 @@ exports.postLogin = async(req,res,next) => {
                             res.status(200).json({
                                 success:true,
                                 message:"Admin successfully logged in",
-                                token:token
+                                token:token,
+                                occupied : result.occupied
                             });
                         })
                         .catch(errorWhileSave => {

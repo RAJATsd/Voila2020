@@ -126,7 +126,8 @@ exports.postLogin = async(req,res,next) => {
                                 token:token,
                                 Tourist:result,
                                 interests,
-                                languages
+                                languages,
+                                occupied:result.occupied
                             });
                         })
                         .catch(errorWhileSave => {

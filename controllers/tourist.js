@@ -279,14 +279,26 @@ exports.editRequest = async (req,res,next) => {
             changes.cancelDate=new Date().toJSON().slice(0,10);
             changes.cancelReason = req.body.cancelReason;
         }
-        if(change === 'COMPLETED'){
+        else if(change === 'COMPLETED'){
             changes.rating = req.body.rating;
             changes.review = req.body.review;
         }
         changes.status = change;
         const bookingId = req.params.bookingId;
-        await bookingsModel.findByIdAndUpdate({_id:bookingId},changes);
-        res.status(200).json({message:"Booking updated successfully"});
+        const bookingChange = await bookingsModel.findByIdAndUpdate({_id:bookingId},changes);
+        if(change==='ONGOING')
+        {
+            Tourist.updateMany({_id:{$in:bookingChange.touristId}},{occupied:true});
+            guideModel.findByIdAndUpdate({_id:bookingChange.guideId},{occupied:true});
+        }
+        else if(change === 'COMPLETED'){
+            Tourist.updateMany({_id:{$in:bookingChange.touristId}},{occupied:false});
+            guideModel.findByIdAndUpdate({_id:bookingChange.guideId},{occupied:false});    
+        }        
+        res.status(200).json({
+            success:true,
+            message:"Booking updated successfully"
+        });
     }
     catch(e){
         console.log(e);
