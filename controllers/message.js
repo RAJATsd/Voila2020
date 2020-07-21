@@ -202,16 +202,13 @@ exports.createRoom = (req,res,next) => {
 
 exports.getAll = async(req,res,next) => {
 	try{
-	let glbl = [];
+	
 	const newRoom = await room.findById({
 		_id: req.params.roomId
 	});
 	
-	for(chat of newRoom.chatList){
-		console.log(chat);
-		glbl.push(chat);
-	}
-	res.status(200).json({message: "list has been retireved",glbl:glbl});
+	
+	res.status(200).json({message: "list has been retireved",newRoom: newRoom});
 }catch (e) {
         console.log(e);
         res.json({
