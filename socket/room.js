@@ -1,6 +1,6 @@
 const room = require('../models/room');
 const tourist = require('../models/tourist');
-const guide = require('../models/guide');
+const guide = require('../models/tourGuide');
 
 module.exports = function(io){
 	io.on('connection', socket =>{
