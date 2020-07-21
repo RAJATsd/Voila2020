@@ -5,12 +5,13 @@ module.exports = function(io){
 		
 		//joinRoom event
 		socket.on('joinRoom',async(data) => {
-		//console.log(data);
+		console.log(data);
 		const roomDetails = await room.findById({
 		_id: data.roomId
 	});
-		
+		console.log(roomDetails);
 		socket.join(roomDetails.name);
+		console.log(roomDetails);
 		});
 	
 	//sendMessage event
