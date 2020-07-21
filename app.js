@@ -38,6 +38,7 @@ const io = require('socket.io').listen(server);
 
 require('./socket/stream')(io);
 require('./socket/private')(io);
+require('./socket/room')(io);
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
