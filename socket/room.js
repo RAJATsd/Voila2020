@@ -23,15 +23,20 @@ module.exports = function(io){
 	});
 		  
 		var msg = data.message;
-		 console.log(data.senderId);
-		 console.log(msg);
+		 
 		 const touristDetails = await tourist.findById({
 		 	_id : data.senderId
-		 })
+		 });
+		 console.log(touristDetails);
+		 const guideDetails = await guide.findById({
+		 		_id : data.senderId
+		 	})
+		 	console.log(guideDetails);
 		 if(touristDetails == null){
 		 	const guideDetails = await guide.findById({
 		 		_id : data.senderId
 		 	})
+		 	console.log(guideDetails);
 		 roomDetails.chatList.push(
 		{
 			senderName : guideDetails.name,
@@ -45,9 +50,7 @@ module.exports = function(io){
 		}); 	
 		 }
 		 roomDetails.save();
-		 console.log(touristDetails.name);
-		 console.log(guideDetails.name);
-		
+		 
 		
 		 //io.in(roomDetails.name).emit("message",{msg});
 		 //socket.to(roomDetails.name).emit("emitMessage",{msg});
