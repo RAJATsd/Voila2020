@@ -19,12 +19,17 @@ module.exports = function(io){
 		const roomDetails = await room.findById({
 		_id: data.roomId
 	});
-		 // console.log(roomDetails.name);
+		  
 		var msg = data.message;
-		roomDetails.chatList.push({
+		 console.log(data.senderId);
+		 console.log(msg);
+		roomDetails.chatList.push(
+		{
 			senderId : data.senderId,
 			body: msg
 		});
+		roomDetails.save();
+		 //io.in(roomDetails.name).emit("message",{msg});
 		 socket.to(roomDetails.name).emit("message",{msg});
 	});
 	});
