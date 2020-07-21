@@ -154,7 +154,7 @@ exports.getDealAcceptance = async (req,res,next) => {
             newBooking.save()
             .then(async booking=>{
                 const touristId = req.user._id;
-                const room = await roomModel.findOneAndUpdate({dealId:req.params.dealId});
+                const room = await roomModel.findOne({dealId:req.params.dealId});
                 room.tourists = room.tourists.concat({touristId});
                 room.save()
                 .then(savedRoom => {
