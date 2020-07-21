@@ -14,13 +14,11 @@ const roomSchema = new schema({
     },
     tourists : [
     {
-        
         touristId:{
             type:schema.Types.ObjectId,
             ref:'tourist'
         }
     }
-
     ],
     chatList : [
     {
