@@ -25,6 +25,9 @@ router.post('/createRoom/:guideId/:dealId',MessageCtrl.createRoom);
 //creates new chat room 
 //requirements: guide and deal Id in params and room name in body
 
+router.get('/getAll/:roomId',MessageCtrl.getAll);
+//retrieves chatList
+//requirements: roomId in params
 
 
 module.exports = router;

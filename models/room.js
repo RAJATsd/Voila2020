@@ -20,7 +20,7 @@ const roomSchema = new schema({
         }
     }
     ],
-    chatList : [
+    chatList: [
     {
         senderId: {
             type: schema.Types.ObjectId
