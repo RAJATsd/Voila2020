@@ -30,7 +30,8 @@ module.exports = function(io){
 		});
 		roomDetails.save();
 		 //io.in(roomDetails.name).emit("message",{msg});
-		 socket.to(roomDetails.name).emit("emitMessage",{msg});
+		 //socket.to(roomDetails.name).emit("emitMessage",{msg});
+		io.emit('emitMessage',{});
 	});
 	});
 };
