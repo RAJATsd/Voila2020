@@ -21,8 +21,10 @@ router.post('/guide/chat-messages/:sender_Id/:receiver_Id',auth,MessageCtrl.Send
 
 router.post('/tourist/chat-messages/:sender_Id/:receiver_Id',auth1,MessageCtrl.SendMessage);
 
-router.post('/createRoom/:guideId/:dealId',auth,MessageCtrl.createRoom);
+router.post('/createRoom/:guideId/:dealId',MessageCtrl.createRoom);
 //creates new chat room 
-//requirements: guide and dealid
+//requirements: guide and deal Id in params and room name in body
+
+
 
 module.exports = router;
