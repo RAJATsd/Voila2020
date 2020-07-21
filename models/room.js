@@ -22,8 +22,8 @@ const roomSchema = new schema({
     ],
     chatList: [
     {
-        senderId: {
-            type: schema.Types.ObjectId
+        senderName: {
+            type: String
         },
         body: {
             type: String,
