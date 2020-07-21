@@ -1,4 +1,6 @@
 const room = require('../models/room');
+const tourist = require('../models/tourist');
+const guide = require('../models/guide');
 
 module.exports = function(io){
 	io.on('connection', socket =>{
@@ -23,12 +25,30 @@ module.exports = function(io){
 		var msg = data.message;
 		 console.log(data.senderId);
 		 console.log(msg);
-		roomDetails.chatList.push(
+		 const touristDetails = await tourist.findById({
+		 	_id : data.senderId
+		 })
+		 if(touristDetails == null){
+		 	const guideDetails = await guide.findById({
+		 		_id : data.senderId
+		 	})
+		 roomDetails.chatList.push(
 		{
-			senderId : data.senderId,
+			senderName : guideDetails.name,
 			body: msg
 		});
-		roomDetails.save();
+		 }else{
+			roomDetails.chatList.push(
+		{
+			senderName : touristDetails.name,
+			body: msg
+		}); 	
+		 }
+		 roomDetails.save();
+		 console.log(touristDetails.name);
+		 console.log(guideDetails.name);
+		
+		
 		 //io.in(roomDetails.name).emit("message",{msg});
 		 //socket.to(roomDetails.name).emit("emitMessage",{msg});
 		io.emit('emitMessage',{});
