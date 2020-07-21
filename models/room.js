@@ -12,11 +12,31 @@ const roomSchema = new schema({
     	type: Number,
     	required: true,
     },
-    touristId : [{
-        type:schema.Types.ObjectId,
-        required:true,
-        ref:'tourist'
-    }],
+    tourists : [
+    {
+        
+        touristId:{
+            type:schema.Types.ObjectId,
+            ref:'tourist'
+        }
+    }
+
+    ],
+    chatList : [
+    {
+        senderId: {
+            type: schema.Types.ObjectId
+        },
+        body: {
+            type: String,
+            default: ''
+        },
+        created : {
+        type: Date,
+        default: Date.now
+        }
+    }
+    ],
     dealId : {
     	type: schema.Types.ObjectId,
     	ref: 'deal'
