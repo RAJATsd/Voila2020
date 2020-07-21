@@ -5,6 +5,7 @@ const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
 const answerModel = require('../models/answers');
+const roomModel = require('../models/room');
 
 exports.addDeal = (req,res,next) => {
     try{
@@ -61,8 +62,20 @@ exports.showDeal = async (req,res,next) => {
 exports.showOffers = async (req,res,next) => {
     try{
         const status = req.params.status;
-        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).sort({startDate:1}).populate('touristId');
-        res.status(200).json({message:"found these offers",bookings:Bookings});
+        const Bookings = await bookingModel.find({guideId:req.user._id,status:status}).sort({startDate:1}).populate('touristId').lean();
+        if(status==='APPROVED'){
+            for(singleBooking of Bookings)
+            {
+                if(singleBooking.dealId){
+                    const fetchedRoom = await roomModel.findOne({dealId:singleBooking.dealId});
+                    singleBooking.roomDetails = fetchedRoom;
+                }
+            }
+        }
+        res.status(200).json({
+            message:"found these offers",
+            bookings:Bookings
+        });
     }
     catch(e){
         console.log(e);
