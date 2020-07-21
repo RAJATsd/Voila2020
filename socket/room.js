@@ -39,12 +39,14 @@ module.exports = function(io){
 		 	console.log(guideDetails);
 		 roomDetails.chatList.push(
 		{
+			senderId: data.senderId,
 			senderName : guideDetails.name,
 			body: msg
 		});
 		 }else{
 			roomDetails.chatList.push(
 		{
+			senderId: data.senderId,
 			senderName : touristDetails.name,
 			body: msg
 		}); 	
