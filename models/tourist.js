@@ -33,6 +33,10 @@ const touristSchema = new schema({
         required:true,
         type:String
     },
+    occupied:{
+        type:Boolean,
+        default:false
+    },
     password : {
         required : true,
         type : String

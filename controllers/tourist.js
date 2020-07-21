@@ -4,6 +4,7 @@ const bookingsModel = require('../models/bookings');
 const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
+const roomModel = require('../models/room');
 
 exports.getCheck = async(req,res,next) => {
     try{
@@ -235,7 +236,16 @@ exports.removeFromFavorites = async (req,res,next) => {
 exports.myBookings = async (req,res,next) => {
     try{
         const status = req.params.status;
-        const bookings = await bookingsModel.find({touristId:req.user._id,status:status}).populate('guideId');
+        const bookings = await bookingsModel.find({touristId:req.user._id,status:status}).populate('guideId').lean();
+        if(status==='APPROVED'){
+            for(singleBooking of bookings)
+            {
+                if(singleBooking.dealId){
+                    const fetchedRoom = await roomModel.findOne({dealId:singleBooking.dealId});
+                    singleBooking.roomDetails = fetchedRoom;
+                }
+            }
+        }
         res.status(200).json({message:"These are the bookings found",bookings:bookings});
     }
     catch(e){
@@ -269,14 +279,26 @@ exports.editRequest = async (req,res,next) => {
             changes.cancelDate=new Date().toJSON().slice(0,10);
             changes.cancelReason = req.body.cancelReason;
         }
-        if(change === 'COMPLETED'){
+        else if(change === 'COMPLETED'){
             changes.rating = req.body.rating;
             changes.review = req.body.review;
         }
         changes.status = change;
         const bookingId = req.params.bookingId;
-        await bookingsModel.findByIdAndUpdate({_id:bookingId},changes);
-        res.status(200).json({message:"Booking updated successfully"});
+        const bookingChange = await bookingsModel.findByIdAndUpdate({_id:bookingId},changes);
+        if(change==='ONGOING')
+        {
+            Tourist.updateMany({_id:{$in:bookingChange.touristId}},{occupied:true});
+            guideModel.findByIdAndUpdate({_id:bookingChange.guideId},{occupied:true});
+        }
+        else if(change === 'COMPLETED'){
+            Tourist.updateMany({_id:{$in:bookingChange.touristId}},{occupied:false});
+            guideModel.findByIdAndUpdate({_id:bookingChange.guideId},{occupied:false});    
+        }        
+        res.status(200).json({
+            success:true,
+            message:"Booking updated successfully"
+        });
     }
     catch(e){
         console.log(e);
