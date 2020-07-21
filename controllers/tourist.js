@@ -153,10 +153,22 @@ exports.getDealAcceptance = async (req,res,next) => {
             });
             newBooking.save()
             .then(booking=>{
-                res.status(201).json({
-                    success:true,
-                    message : "Booking created successfully", 
-                    booking:booking
+                const touristId = req.user._id;
+                const room = await roomModel.findOneAndUpdate({dealId:req.params.dealId});
+                room.tourists = room.tourists.concat({touristId});
+                room.save()
+                .then(savedRoom => {
+                    res.status(201).json({
+                        success:true,
+                        message : "Booking created successfully", 
+                        booking:booking
+                    });
+                })
+                .catch(e=>{
+                    res.json({
+                        success:false,
+                        error:e
+                    });
                 });
             })
             .catch(error => {
@@ -280,8 +292,8 @@ exports.editRequest = async (req,res,next) => {
             changes.cancelReason = req.body.cancelReason;
         }
         else if(change === 'COMPLETED'){
-            changes.rating = req.body.rating;
-            changes.review = req.body.review;
+            changes.rating = req.body.rating||null;
+            changes.review = req.body.review||null;
         }
         changes.status = change;
         const bookingId = req.params.bookingId;
