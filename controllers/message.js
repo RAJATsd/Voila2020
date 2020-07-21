@@ -185,6 +185,7 @@ exports.createRoom = (req,res,next) => {
 	name : req.body.name,
 	people: 1
 	});
+	
 	newRoom.save()
 	.then(room => {
 	console.log(room);
