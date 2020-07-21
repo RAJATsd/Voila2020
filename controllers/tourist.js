@@ -152,7 +152,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                 tourType : 'deal'
             });
             newBooking.save()
-            .then(booking=>{
+            .then(async booking=>{
                 const touristId = req.user._id;
                 const room = await roomModel.findOneAndUpdate({dealId:req.params.dealId});
                 room.tourists = room.tourists.concat({touristId});
