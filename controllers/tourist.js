@@ -29,7 +29,7 @@ exports.getCheck = async(req,res,next) => {
 
 exports.getGuidesBySearch = async (req,res,next) => {
     try{
-        const city = req.body.city;
+        const state = req.body.state;
         const startDate = req.body.startDate;
         const endDate = req.body.endDate;
         const noOfPeople = req.body.noOfPeople;
@@ -37,13 +37,13 @@ exports.getGuidesBySearch = async (req,res,next) => {
         let {minPrice,maxPrice} = req.body.extra_filter;
         if(req.body.filters===false){
             guides = await guideModel.find({
-                city:city,
+                state:state,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice}
             }).lean();
         }
         else{
             const filters = req.body.extra_filter;
-            const {rating,interests,languages} = filters;
+            const {rating,interests,languages,city} = filters;
             const objFilter = {};
             if(rating!=null){
                 objFilter.rating={$gte:rating};
@@ -53,9 +53,12 @@ exports.getGuidesBySearch = async (req,res,next) => {
             }
             if(languages.length!=0){
                 objFilter.languages={$in:languages}
-            };      
+            }
+            if(city.length!=0){
+                objFilter.city={$in:city}
+            }      
             guides = await guideModel.find({
-                city:city,
+                state:state,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice},
                 ...objFilter
             }).lean();
