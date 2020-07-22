@@ -142,14 +142,42 @@ exports.showList = async(req, res, next) => {
             list["userName"] =  user.name;
             list["userEmail"] =  user.email;
             
-            console.log(list);
+            //console.log(list);
 
             glbl.push(list);
             
         }          
+        const roomDetails = await roomModel.find({
+            guideId: req.params.id
+        }).lean();
+         //console.log(roomDetails);
         
+        for(chat of roomDetails){
+            //console.log(chat.chatList);
+            if(roomDetails !== undefined){
+            const len = chat.chatList.length;
+            //console.log(len);
+            const list = chat.chatList[len-1];
+            
+            if(list !== undefined){
+            list["roomName"] = chat.name;
+            }
+            console.log(list);
+            glbl.push(list);
+        }
+    }
+//           movies.sort(function(a, b) {
+//     var dateA = new Date(a.release), dateB = new Date(b.release);
+//     return dateA - dateB;
+// });
+        glbl.sort(function(a,b){
+            var dateA = new Date(a.created), dateB = new Date(b.created);
+            return dateB - dateA ;
+        });
+
           res.status(200).json({message: "list has been retireved",glbl:glbl});
-    } catch (e) {
+        }
+     catch (e) {
         console.log(e);
         res.json({
             success: false,
@@ -157,6 +185,7 @@ exports.showList = async(req, res, next) => {
         });
     }
 }
+
 
 exports.fillAnswers = async(req,res,next) => {
     try{
