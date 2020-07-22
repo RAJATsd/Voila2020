@@ -389,11 +389,33 @@ exports.showList = async(req, res, next) => {
             list["userName"] =  user.name;
             list["userEmail"] =  user.email;
             
-            console.log(list);
+           
 
             glbl.push(list);
             
         }          
+        const roomDetails = await roomModel.find({
+            "tourists.touristId" : req.params.id
+        }).lean();
+        for(chat of roomDetails){
+            //console.log(chat.chatList);
+            if(roomDetails !== undefined){
+            const len = chat.chatList.length;
+            //console.log(len);
+            const list = chat.chatList[len-1];
+            
+            if(list !== undefined){
+            list["roomName"] = chat.name;
+            
+            
+            glbl.push(list);
+        }
+        }
+    }
+glbl.sort(function(a,b){
+            var dateA = new Date(a.created), dateB = new Date(b.created);
+            return dateB - dateA ;
+        });
         
           res.status(200).json({message: "list has been retireved",glbl:glbl});
     } catch (e) {
