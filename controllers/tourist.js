@@ -64,7 +64,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
             }).lean();
         }
         const deals = await dealsModel.find({
-            city:city,
+            state:state,
             endDate:{$gte:startDate},
             peopleLeft:{$gte:noOfPeople}
         })
