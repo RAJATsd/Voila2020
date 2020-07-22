@@ -406,7 +406,7 @@ exports.showList = async(req, res, next) => {
             
             if(list !== undefined){
             list["roomName"] = chat.name;
-            
+            list["roomId"] = chat._id;
             
             glbl.push(list);
         }
