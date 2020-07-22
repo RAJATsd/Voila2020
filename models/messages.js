@@ -37,7 +37,7 @@ const MessageSchema = new schema({
             type : Boolean,
             default: false
         },
-        createdAt: {
+        created: {
             type : Date,
             default:Date.now()
         }
