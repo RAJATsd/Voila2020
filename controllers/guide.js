@@ -161,9 +161,11 @@ exports.showList = async(req, res, next) => {
             
             if(list !== undefined){
             list["roomName"] = chat.name;
-            }
+            
             console.log(list);
+
             glbl.push(list);
+        }
         }
     }
 //           movies.sort(function(a, b) {
