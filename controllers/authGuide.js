@@ -114,24 +114,33 @@ exports.postLogin = async(req,res,next) => {
                         });
                     }
                     else{
-                        const token = jwt.sign({email:email,_id:guide._id.toString()},'thisismysecretkeyforthishackathon2020');
-                        guide.tokens = guide.tokens.concat({token});
-                        guide.save()
-                        .then(saved => {
-                            res.status(200).json({
-                                success:true,
-                                message:"Person successfully logged in",
-                                token:token,
-                                guide:guide
-                            });
-                        })
-                        .catch(errorWhileSave => {
-                            console.log(errorWhileSave);
+                        if(guide.profileStatus==='PENDING'||guide.profileStatus==='REJECTED'){
                             res.json({
                                 success:false,
-                                message:"INTERNAL SERVER ERROR"
+                                status:guide.profileStatus,
+                                message:'Your profile has not been approved'
+                            })
+                        }
+                        else{
+                            const token = jwt.sign({email:email,_id:guide._id.toString()},'thisismysecretkeyforthishackathon2020');
+                            guide.tokens = guide.tokens.concat({token});
+                            guide.save()
+                            .then(saved => {
+                                res.status(200).json({
+                                    success:true,
+                                    message:"Person successfully logged in",
+                                    token:token,
+                                    guide:guide
+                                });
+                            })
+                            .catch(errorWhileSave => {
+                                console.log(errorWhileSave);
+                                res.json({
+                                    success:false,
+                                    message:"INTERNAL SERVER ERROR"
+                                });
                             });
-                        });    
+                        }    
                     }
                 })
                 .catch(err=>{
