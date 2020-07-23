@@ -2,6 +2,14 @@ const Guide = require('../models/tourGuide');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+let urlForPic=null;
+if(process.env.PORT){
+    urlForPic='https://voila2020.herokuapp.com/profileImages/';
+}
+else{
+    urlForPic='localhost:3000/profileImages/';
+}
+
 exports.postSignup = (req,res,next) => {
     try{
         const userData = JSON.parse(req.body.data);
@@ -25,7 +33,7 @@ exports.postSignup = (req,res,next) => {
             else{
                 let picUrl = null;
                 if(profilePic){
-                    picUrl = 'localhost:3000/profileImages/'+profilePic.filename;
+                    picUrl = urlForPic+profilePic.filename;
                 }
                 const password = userData.password;
                 bcrypt.hash(password,8)
