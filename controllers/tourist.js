@@ -38,7 +38,8 @@ exports.getGuidesBySearch = async (req,res,next) => {
         if(req.body.filters===false){
             guides = await guideModel.find({
                 state:state,
-                perHeadCharge:{$gte:minPrice,$lte:maxPrice}
+                perHeadCharge:{$gte:minPrice,$lte:maxPrice},
+                profileStatus:'APPROVED'
             }).lean();
         }
         else{
@@ -60,6 +61,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
             guides = await guideModel.find({
                 state:state,
                 perHeadCharge:{$gte:minPrice,$lte:maxPrice},
+                profileStatus:'APPROVED',
                 ...objFilter
             }).lean();
         }
