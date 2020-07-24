@@ -126,8 +126,8 @@ exports.editProfile = async (req,res,next) => {
         changes.picUrl = urlForPic+profilePic.filename;
     }
     console.log(changes);
-    await Guide.findByIdAndUpdate({email:changes.email},changes);
-    const profile = await Guide.findById({email:changes.email});
+    await Guide.findOneAndUpdate({email:changes.email},changes);
+    const profile = await Guide.findOne({email:changes.email});
     res.status(200).json({message:"The pofile has been updated",profile:profile});
   }
   catch(e){
