@@ -7,6 +7,14 @@ const Tourist = require('../models/tourist');
 const answerModel = require('../models/answers');
 const roomModel = require('../models/room');
 
+let urlForPic=null;
+if(process.env.PORT){
+    urlForPic='https://voila2020.herokuapp.com/profileImages/';
+}
+else{
+    urlForPic='localhost:3000/profileImages/';
+}
+
 exports.addDeal = (req,res,next) => {
     try{
         const newDeal = new dealModel({
@@ -112,7 +120,12 @@ exports.bookingResponse = (req,res,next) => {
 
 exports.editProfile = async (req,res,next) => {
   try{
-    await Guide.findByIdAndUpdate({_id:req.user._id},req.body);
+    const changes = JSON.parse(req.body.data);
+    const profilePic = req.file;  
+    if(profilePic){
+        changes.picUrl = urlForPic+profilePic.filename;
+    }
+    await Guide.findByIdAndUpdate({_id:req.user._id},changes);
     const profile = await Guide.findById({_id:req.user._id});
     res.status(200).json({message:"The pofile has been updated",profile:profile});
   }
