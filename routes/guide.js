@@ -23,7 +23,7 @@ router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
 
-router.put('/guide/profile/update/:USER',commonController.editProfile);
+router.put('/guide/profile/update/:USER',guideController.editProfile);
 //edits any changes in the profile
 //requirements : fields in req.body, USER in params which will be either GUIDE or TOURIST
 router.put('/guide/profile/changePassword',auth,commonController.changePassword);
