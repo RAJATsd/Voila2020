@@ -96,37 +96,51 @@ exports.getGuidesBySearch = async (req,res,next) => {
 
 exports.getSelectGuide = async (req,res,next) => {
     try{
-        const newBooking = new bookingsModel({
-            guideId : req.params.guideId,
-            touristId : req.user._id,
-            price : req.body.price,
-            noOfPeople : req.body.noOfPeople,
-            //places : req.body.places,
-            startDate : req.body.startDate,
-            endDate : req.body.endDate,
-            groupType : req.body.groupType,
-            status : 'PENDING'
+        const busyBookings = await bookingModel.find({
+            guideId:req.params.guideId,
+            startDate:{$lte:req.body.endDate},
+            endDate:{$gte:req.body.startDate},
+            status:'APPROVED'
         });
-        newBooking.save()
-        .then(booking => {
-            booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
-            booking.save()
-            .then(savedBooking => res.status(200).json({message:"Booking created successfully",booking:savedBooking}))
+        if(busyBookings.length){
+            res.json({
+                success:false,
+                message:"The guide is already busy in these days"
+            });
+        }
+        else{
+            const newBooking = new bookingsModel({
+                guideId : req.params.guideId,
+                touristId : req.user._id,
+                price : req.body.price,
+                noOfPeople : req.body.noOfPeople,
+                //places : req.body.places,
+                startDate : req.body.startDate,
+                endDate : req.body.endDate,
+                groupType : req.body.groupType,
+                status : 'PENDING'
+            });
+            newBooking.save()
+            .then(booking => {
+                booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
+                booking.save()
+                .then(savedBooking => res.status(200).json({message:"Booking created successfully",booking:savedBooking}))
+                .catch(error => {
+                    console.log(error)
+                    res.json({
+                        success:false,
+                        error:error
+                    });
+                });
+            })
             .catch(error => {
-                console.log(error)
+                console.log(error);
                 res.json({
                     success:false,
                     error:error
                 });
             });
-        })
-        .catch(error => {
-            console.log(error);
-            res.json({
-                success:false,
-                error:error
-            });
-        });
+        }
     }
     catch(e){
         console.log(e);
@@ -329,9 +343,10 @@ exports.editRequest = async (req,res,next) => {
 exports.specificGuideDeals = async (req,res,next) => {
     try{
         const guideId = req.params.guideId;
-        const deals = await dealsModel.find({guideId:guideId}).populate('favorites');
+        const deals = await dealsModel.find({guideId:guideId}).populate('favorites').populate('guideId');
         const guide = await guideModel.findById({_id:guideId});
-        res.status(200).json({message:"Deals of this tour guide",guide,deals:deals});    
+        const ratings = await bookingsModel.find({guideId:guideId,status:'COMPLETED'})
+        res.status(200).json({message:"Deals of this tour guide",guide,deals:deals,ratings:ratings});    
     }
     catch(e){
         console.log(e);
