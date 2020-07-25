@@ -15,34 +15,48 @@ else{
     urlForPic='localhost:3000/profileImages/';
 }
 
-exports.addDeal = (req,res,next) => {
+exports.addDeal = async (req,res,next) => {
     try{
-        const newDeal = new dealModel({
-            places : req.body.places,
-            price : req.body.price,
-            guideId : req.user._id,
-            startDate : req.body.startDate,
-            endDate : req.body.endDate,
-            city : req.body.city,
-            state:req.body.state,
-            peopleLimit:req.body.peopleLimit,
-            groupType:req.body.groupType,
-            peopleLeft:req.body.peopleLimit
+        const busyBookings = await bookingModel.find({
+            guideId:req.user._id,
+            startDate:{$lte:req.body.endDate},
+            endDate:{$gte:req.body.startDate},
+            status:'APPROVED'
         });
-        newDeal.save()
-        .then(deal => {
-            res.status(201).json({
-                message:"New Deal Created",
-                deal:deal
-            });
-        })
-        .catch(error => {
-            console.log(error);
+        if(busyBookings.length){
             res.json({
-                success : false,
-                error : error
+                success:false,
+                message:"guide is already busy between these days"
             });
-        });
+        }
+        else{
+            const newDeal = new dealModel({
+                places : req.body.places,
+                price : req.body.price,
+                guideId : req.user._id,
+                startDate : req.body.startDate,
+                endDate : req.body.endDate,
+                city : req.body.city,
+                state:req.body.state,
+                peopleLimit:req.body.peopleLimit,
+                groupType:req.body.groupType,
+                peopleLeft:req.body.peopleLimit
+            });
+            newDeal.save()
+            .then(deal => {
+                res.status(201).json({
+                    message:"New Deal Created",
+                    deal:deal
+                });
+            })
+            .catch(error => {
+                console.log(error);
+                res.json({
+                    success : false,
+                    error : error
+                });
+            });
+        }
     }
     catch(err){
         console.log(err)
@@ -94,8 +108,25 @@ exports.showOffers = async (req,res,next) => {
     }
 }
 
-exports.bookingResponse = (req,res,next) => {
+exports.bookingResponse = async (req,res,next) => {
     try{
+        if(req.params.response==='APPROVED'){
+            const selectedBooking = await bookingModel.findOne({_id:req.params.bookingId});
+            const bookingStartDate = selectedBooking.startDate;
+            const bookingEndDate = selectedBooking.endDate;
+            const busyBookings = await bookingModel.find({
+                guideId:req.user._id,
+                startDate:{$lte:bookingEndDate},
+                endDate:{$gte:bookingStartDate},
+                status:'APPROVED'
+            });
+            if(busyBookings.length){
+                return res.json({
+                    success:false,
+                    message:"guide is already busy between these days"
+                });
+            }
+        }
         bookingModel.findOneAndUpdate({_id:req.params.bookingId},{status:req.params.response})
         .then(updatedBooking => {
             res.status(200).json({message:"booking updated",booking:updatedBooking});
