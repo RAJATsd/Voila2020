@@ -13,4 +13,4 @@ trending :
 
 guide and tourist template pic :
 1. Guide - https://voila2020.herokuapp.com/profileImages/users/guide.jpeg
-2. Tourist - https://voila2020.herokuapp.com/profileImages/trending/tourist.jpeg
+2. Tourist - https://voila2020.herokuapp.com/profileImages/users/tourist.jpeg
