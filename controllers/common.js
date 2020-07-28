@@ -38,19 +38,28 @@ exports.changePassword = async (req,res,next) => {
 }
 
 exports.editProfile = async (req,res,next) => {
-    let userModel;
-    if(req.params.USER == 'GUIDE')
-        userModel = guideModel;
-    else
-        userModel = touristModel;
-
-    await userModel.findByIdAndUpdate({_id:req.user._id},req.body);
-    const profile = await userModel.findById({_id:req.user._id});
-    res.status(200).json({
-        success:true,
-        message:"The profile has been updated",
-        profile:profile
-    });
+    try{
+        let userModel;
+        if(req.params.USER == 'GUIDE')
+            userModel = guideModel;
+        else
+            userModel = touristModel;
+    
+        await userModel.findByIdAndUpdate({_id:req.user._id},req.body);
+        const profile = await userModel.findById({_id:req.user._id});
+        res.status(200).json({
+            success:true,
+            message:"The profile has been updated",
+            profile:profile
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:e
+        });
+    }
 }
 
 exports.getUserByEmail = async (req,res,next) => {
