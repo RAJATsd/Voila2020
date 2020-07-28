@@ -96,7 +96,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
 
 exports.getSelectGuide = async (req,res,next) => {
     try{
-        const busyBookings = await bookingModel.find({
+        const busyBookings = await bookingsModel.find({
             guideId:req.params.guideId,
             startDate:{$lte:req.body.endDate},
             endDate:{$gte:req.body.startDate},
