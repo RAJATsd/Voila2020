@@ -45,6 +45,7 @@ exports.addDeal = async (req,res,next) => {
             newDeal.save()
             .then(deal => {
                 res.status(201).json({
+                    success:true,
                     message:"New Deal Created",
                     deal:deal
                 });
@@ -70,7 +71,11 @@ exports.addDeal = async (req,res,next) => {
 exports.showDeal = async (req,res,next) => {
     try{
         const deals = await dealModel.find({guideId:req.user._id});
-        res.status(200).json({message:"these are the deals",deals:deals});    
+        res.status(200).json({
+            success:true,
+            message:"these are the deals",
+            deals:deals
+        });    
     }
     catch(e){
         console.log(e);
@@ -95,6 +100,7 @@ exports.showOffers = async (req,res,next) => {
             }
         }
         res.status(200).json({
+            success:true,
             message:"found these offers",
             bookings:Bookings
         });
@@ -129,7 +135,11 @@ exports.bookingResponse = async (req,res,next) => {
         }
         bookingModel.findOneAndUpdate({_id:req.params.bookingId},{status:req.params.response})
         .then(updatedBooking => {
-            res.status(200).json({message:"booking updated",booking:updatedBooking});
+            res.status(200).json({
+                success:true,
+                message:"booking updated",
+                booking:updatedBooking
+            });
             updationMiddleware.changeBookingStatus;
         })
         .catch(error => {
@@ -159,7 +169,11 @@ exports.editProfile = async (req,res,next) => {
     console.log(changes);
     await Guide.findOneAndUpdate({email:changes.email},changes);
     const profile = await Guide.findOne({email:changes.email});
-    res.status(200).json({message:"The pofile has been updated",profile:profile});
+    res.status(200).json({
+        success:true,
+        message:"The pofile has been updated",
+        profile:profile
+    });
   }
   catch(e){
       console.log(e);
@@ -222,7 +236,11 @@ exports.showList = async(req, res, next) => {
             return dateB - dateA ;
         });
 
-          res.status(200).json({message: "list has been retireved",glbl:glbl});
+          res.status(200).json({
+              success:true,
+              message: "list has been retireved",
+              glbl:glbl
+            });
         }
      catch (e) {
         console.log(e);

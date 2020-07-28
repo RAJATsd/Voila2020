@@ -29,7 +29,11 @@ exports.GetAllMessages = async(req,res,next) => {
 		const msg = await Message.findOne({
 			conversationId : conversation._id
 		});
-	res.status(200).json({message:"messages fetched",msg:msg});
+	res.status(200).json({
+		success:true,
+		message:"messages fetched",
+		msg:msg
+	});
 
 	}
 }
@@ -63,7 +67,10 @@ exports.SendMessage = (req,res,next) => {
 			}
 		}
 			).then(() => {
-			res.status(201).json({message:"Message Sent"});
+			res.status(201).json({
+				success:true,
+				message:"Message Sent"
+			});
 		})
 		.catch(error => {
         console.log(error);
@@ -137,7 +144,11 @@ exports.SendMessage = (req,res,next) => {
 
 		await newMessage.save()
 		.then(message => {
-			res.status(201).json({message:"Message Sent",message:message});
+			res.status(201).json({
+				success:true,
+				message:"Message Sent",
+				message:message
+			});
 		})
 		.catch(error => {
         console.log(error);
@@ -169,9 +180,15 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 					{$set: {'message.$.isRead' : true} }
 					);
 				});
-				res.status(200).json({message : 'Messages marked as read'});
+				res.status(200).json({
+					success:true,
+					message : 'Messages marked as read'
+				});
 			}catch(err){
-				res.status(400).json({message : 'error'});
+				res.status(400).json({
+					success:false,
+					message : 'error'
+				});
 			}
 		}
 

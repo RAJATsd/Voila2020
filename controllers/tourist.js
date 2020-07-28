@@ -124,7 +124,11 @@ exports.getSelectGuide = async (req,res,next) => {
             .then(booking => {
                 booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
                 booking.save()
-                .then(savedBooking => res.status(200).json({message:"Booking created successfully",booking:savedBooking}))
+                .then(savedBooking => res.status(200).json({
+                    success:true,
+                    message:"Booking created successfully",
+                    booking:savedBooking
+                }))
                 .catch(error => {
                     console.log(error)
                     res.json({
@@ -146,7 +150,7 @@ exports.getSelectGuide = async (req,res,next) => {
         console.log(e);
         res.json({
             success:false,
-            error:e
+            error:"INTERNAL SERVER ERROR"
         });
     }
 }
@@ -277,7 +281,11 @@ exports.myBookings = async (req,res,next) => {
                 }
             }
         }
-        res.status(200).json({message:"These are the bookings found",bookings:bookings});
+        res.status(200).json({
+            success:true,
+            message:"These are the bookings found",
+            bookings:bookings
+        });
     }
     catch(e){
         console.log(e);
@@ -291,7 +299,11 @@ exports.myBookings = async (req,res,next) => {
 exports.myFavorites = async (req,res,next) => {
     try{
         const deals = await dealsModel.find({favorites:req.user._id}).populate('guideId');
-        res.status(200).json({message:"These are your favorite deals",deals:deals});
+        res.status(200).json({
+            success:true,
+            message:"These are your favorite deals",
+            deals:deals
+        });
     }
     catch(e){
         console.log(e);
@@ -346,7 +358,13 @@ exports.specificGuideDeals = async (req,res,next) => {
         const deals = await dealsModel.find({guideId:guideId}).populate('favorites').populate('guideId');
         const guide = await guideModel.findById({_id:guideId});
         const ratings = await bookingsModel.find({guideId:guideId,status:'COMPLETED'})
-        res.status(200).json({message:"Deals of this tour guide",guide,deals:deals,ratings:ratings});    
+        res.status(200).json({
+            success:true,
+            message:"Deals of this tour guide",
+            guide,
+            deals:deals,
+            ratings:ratings
+        });    
     }
     catch(e){
         console.log(e);
@@ -437,7 +455,11 @@ glbl.sort(function(a,b){
             return dateB - dateA ;
         });
         
-          res.status(200).json({message: "list has been retireved",glbl:glbl});
+          res.status(200).json({
+              success:true,
+              message: "list has been retireved",
+              glbl:glbl
+            });
     } catch (e) {
         console.log(e);
         res.json({
