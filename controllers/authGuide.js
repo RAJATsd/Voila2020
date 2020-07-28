@@ -1,6 +1,7 @@
 const Guide = require('../models/tourGuide');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const s3Instance = require('../helpers/aws').s3;
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -8,6 +9,18 @@ if(process.env.PORT){
 }
 else{
     urlForPic='localhost:3000/profileImages/';
+}
+
+exports.testingAWS = async (req,res,next) => {
+    try{
+        
+          
+        console.log('kya ye pehele hua h kya');
+    }
+    catch(e){
+        console.log(e);
+        res.json({e});
+    }
 }
 
 exports.postSignup = (req,res,next) => {
@@ -32,46 +45,99 @@ exports.postSignup = (req,res,next) => {
             }
             else{
                 let picUrl = null;
-                if(profilePic){
-                    picUrl = urlForPic+profilePic.filename;
-                }
                 const password = userData.password;
                 bcrypt.hash(password,8)
                 .then(hashed=>{
-                    const newGuide = new Guide({
-                        name : userData.name,
-                        gender : userData.gender, 
-                        password : hashed,
-                        dob : userData.dob,
-                        phoneNumber : phoneNumber,
-                        email : userData.email,
-                        address : userData.address,
-                        experience : userData.experience,
-                        peopleLimit : userData.peopleLimit,
-                        perHeadCharge : userData.perHeadCharge,
-                        perDayCharge : userData.perDayCharge,
-                        picUrl : picUrl,
-                        aadhaarNumber : userData.aadhaarNumber,
-                        interests : userData.interests,
-                        languages : userData.languages,
-                        city : userData.city,
-                        state : userData.state
-                    });    
-                    newGuide.save()
-                    .then(result =>{
-                        res.status(201).json({
-                            success:true,
-                            message:"New Guide Registered Successfully",
-                            data : result
+                    if(profilePic){
+                        //picUrl = urlForPic+profilePic.filename;
+                        const paramsForS3 = {
+                            Bucket:process.env.AWS_BUCKET_NAME,
+                            Key : Date.now()+req.file.originalname,
+                            Body:req.file.buffer
+                        }
+                        s3Instance.upload(paramsForS3,async(err,data)=>{
+                            if(err){
+                                console.log(e)
+                                res.json({
+                                    success:false,
+                                    message:"SOMETHING WRONG WITH BUCKET"
+                                });
+                            }
+                            else{
+                                picUrl = data.Location;
+                                const newGuide = new Guide({
+                                    name : userData.name,
+                                    gender : userData.gender, 
+                                    password : hashed,
+                                    dob : userData.dob,
+                                    phoneNumber : phoneNumber,
+                                    email : userData.email,
+                                    address : userData.address,
+                                    experience : userData.experience,
+                                    peopleLimit : userData.peopleLimit,
+                                    perHeadCharge : userData.perHeadCharge,
+                                    perDayCharge : userData.perDayCharge,
+                                    picUrl : picUrl,
+                                    aadhaarNumber : userData.aadhaarNumber,
+                                    interests : userData.interests,
+                                    languages : userData.languages,
+                                    city : userData.city,
+                                    state : userData.state
+                                });    
+                                newGuide.save()
+                                .then(result =>{
+                                    res.status(201).json({
+                                        success:true,
+                                        message:"New Guide Registered Successfully",
+                                        data : result
+                                    });
+                                })
+                                .catch(err=>{
+                                    console.log(err);
+                                    res.json({
+                                        success:false,
+                                        message:"INTERNAL SERVER ERROR"
+                                    })
+                                });        
+                            }
                         });
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                        res.json({
-                            success:false,
-                            message:"INTERNAL SERVER ERROR"
+                    }
+                    else{
+                        const newGuide = new Guide({
+                            name : userData.name,
+                            gender : userData.gender, 
+                            password : hashed,
+                            dob : userData.dob,
+                            phoneNumber : phoneNumber,
+                            email : userData.email,
+                            address : userData.address,
+                            experience : userData.experience,
+                            peopleLimit : userData.peopleLimit,
+                            perHeadCharge : userData.perHeadCharge,
+                            perDayCharge : userData.perDayCharge,
+                            picUrl : picUrl,
+                            aadhaarNumber : userData.aadhaarNumber,
+                            interests : userData.interests,
+                            languages : userData.languages,
+                            city : userData.city,
+                            state : userData.state
+                        });    
+                        newGuide.save()
+                        .then(result =>{
+                            res.status(201).json({
+                                success:true,
+                                message:"New Guide Registered Successfully",
+                                data : result
+                            });
                         })
-                    });
+                        .catch(err=>{
+                            console.log(err);
+                            res.json({
+                                success:false,
+                                message:"INTERNAL SERVER ERROR"
+                            })
+                        });
+                    }
                 })
                 .catch(err=>{
                     console.log(err)

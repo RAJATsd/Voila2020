@@ -2,6 +2,7 @@ const express = require('express');
 const commonController = require('../controllers/common');
 const guideController = require('../controllers/guide');
 const auth = require('../middleware/guideAuth');
+const uploadConfig = require('../middleware/fileUpload');
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
 
-router.put('/guide/profile/update/:USER',auth,guideController.editProfile);
+router.put('/guide/profile/update/:USER',auth,uploadConfig,guideController.editProfile);
 //edits any changes in the profile
 //requirements : fields in req.body, USER in params which will be either GUIDE or TOURIST
 router.put('/guide/profile/changePassword',auth,commonController.changePassword);

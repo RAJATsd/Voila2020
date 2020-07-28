@@ -40,26 +40,26 @@ require('./socket/stream')(io);
 require('./socket/private')(io);
 require('./socket/room')(io);
     
-var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './uploads/profileImages/')
-    },
-    filename: function (req, file, cb) {
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './uploads/profileImages/')
+//     },
+//     filename: function (req, file, cb) {
 
-        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
-            var err = new Error();
-            err.code = 'filetype';
-            return cb(err);
-        }
-        else
-        {
-            cb(null,new Date().toISOString()+'_'+file.originalname);
-        }
-    }
-});
+//         if(!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+//             var err = new Error();
+//             err.code = 'filetype';
+//             return cb(err);
+//         }
+//         else
+//         {
+//             cb(null,new Date().toISOString()+'_'+file.originalname);
+//         }
+//     }
+// });
   
-multer({ storage: storage }).single('profilePic');
-app.use(multer({ storage: storage }).single('profilePic'));
+// multer({ storage: storage }).single('profilePic');
+//app.use(multer({ storage: storage }).single('profilePic'));
 
 const cronJob = cron.CronJob;
 const job = new cronJob('1 0 * * *', () => {

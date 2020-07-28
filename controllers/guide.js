@@ -6,6 +6,7 @@ const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
 const answerModel = require('../models/answers');
 const roomModel = require('../models/room');
+const s3Instance = require('../helpers/aws').s3;
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -164,16 +165,41 @@ exports.editProfile = async (req,res,next) => {
     const changes = JSON.parse(req.body.data);
     const profilePic = req.file;  
     if(profilePic){
-        changes.picUrl = urlForPic+profilePic.filename;
+        const paramsForS3 = {
+            Bucket:process.env.AWS_BUCKET_NAME,
+            Key : Date.now()+req.file.originalname,
+            Body:req.file.buffer
+        }
+        s3Instance.upload(paramsForS3,async(err,data)=>{
+            if(err){
+                console.log(e)
+                res.json({
+                    success:false,
+                    message:"SOMETHING WRONG WITH BUCKET"
+                });
+            }
+            else{
+                changes.picUrl = data.Location;
+                await Guide.findOneAndUpdate({email:changes.email},changes);
+                const profile = await Guide.findOne({email:changes.email});
+                res.status(200).json({
+                    success:true,
+                    message:"The pofile has been updated",
+                    profile:profile
+                });
+            }
+        });
+    }
+    else{
+        await Guide.findOneAndUpdate({email:changes.email},changes);
+        const profile = await Guide.findOne({email:changes.email});
+        res.status(200).json({
+            success:true,
+            message:"The pofile has been updated",
+            profile:profile
+        });
     }
     console.log(changes);
-    await Guide.findOneAndUpdate({email:changes.email},changes);
-    const profile = await Guide.findOne({email:changes.email});
-    res.status(200).json({
-        success:true,
-        message:"The pofile has been updated",
-        profile:profile
-    });
   }
   catch(e){
       console.log(e);
