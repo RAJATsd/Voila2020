@@ -31,7 +31,7 @@ exports.getRandomDeals = async(req,res,next) => {
         const randomGuides = await dealsModel.find().distinct('guideId');
         const randomDeals = [];
         for(oneGuide of randomGuides){
-            const dealFound = await dealsModel.findOne({guideId:oneGuide});
+            const dealFound = await dealsModel.findOne({guideId:oneGuide}).populate('guideId');
             randomDeals.push(dealFound);
         }
         res.json({
