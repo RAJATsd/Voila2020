@@ -26,6 +26,27 @@ exports.getCheck = async(req,res,next) => {
     }
 }
 
+exports.getRandomDeals = async(req,res,next) => {
+    try{
+        const randomGuides = await dealsModel.find().distinct('guideId');
+        const randomDeals = [];
+        for(oneGuide of randomGuides){
+            const dealFound = await dealsModel.findOne({guideId:oneGuide});
+            randomDeals.push(dealFound);
+        }
+        res.json({
+            success:true,
+            deals:randomDeals
+        });
+    }
+    catch(err){
+        console.log(err);
+        res.json({
+            success:false,
+            error:err
+        });
+    }
+}
 
 exports.getGuidesBySearch = async (req,res,next) => {
     try{
