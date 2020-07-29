@@ -79,6 +79,7 @@ exports.postSignup = (req,res,next) => {
 
 exports.postLogin = async(req,res,next) => {
     try{
+        console.log(req.body);
         const email = req.body.email;
         const password = req.body.password;
     
