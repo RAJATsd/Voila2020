@@ -77,6 +77,7 @@ app.use(messageRoutes)
 app.use(commonRoutes);
 app.use(authAdminRoutes);
 app.get('/',(req,res,next)=>{
+    console.log('logging in on the home route');
     res.send(JSON.stringify({Hello:"Baby, welcome to my world"}));
 });
 

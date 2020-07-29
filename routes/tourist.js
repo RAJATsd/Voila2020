@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/tourist/guides',touristController.getGuidesBySearch);
 //for searching of guides
-//requirements : city,startDate,endDate
+//requirements : city,startDate,endDate,noOfPeople
 //returns the full model of the guides
 router.post('/tourist/guides/offer/:guideId',auth,touristController.getSelectGuide);
 //for making a offer
