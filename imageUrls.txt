@@ -14,3 +14,18 @@ trending :
 guide and tourist template pic :
 1. Guide - https://voila2020.herokuapp.com/profileImages/users/guide.jpeg
 2. Tourist - https://voila2020.herokuapp.com/profileImages/users/tourist.jpeg
+
+aws url for states:
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/States/{state name here}.jpg
+
+aws url for andhra pradesh cities :
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/andhra_pradesh/{city name here}.jpg
+
+aws url for delhi cities :
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/delhi/{city name here}.jpg
+
+aws url for telangana cities :
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/telangana/{city name here}.jpg
+
+aws url for uttrakhand  cities:
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/uttrakhand/{city name here}.jpg

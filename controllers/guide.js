@@ -7,6 +7,8 @@ const Tourist = require('../models/tourist');
 const answerModel = require('../models/answers');
 const roomModel = require('../models/room');
 const s3Instance = require('../helpers/aws').s3;
+const ioTouristConnections = require('../socket/notifications').connectedTourists;
+const notificationModel = require('../models/notifications');
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -117,8 +119,8 @@ exports.showOffers = async (req,res,next) => {
 
 exports.bookingResponse = async (req,res,next) => {
     try{
+        const selectedBooking = await bookingModel.findOne({_id:req.params.bookingId});
         if(req.params.response==='APPROVED'){
-            const selectedBooking = await bookingModel.findOne({_id:req.params.bookingId});
             const bookingStartDate = selectedBooking.startDate;
             const bookingEndDate = selectedBooking.endDate;
             const busyBookings = await bookingModel.find({
@@ -145,10 +147,24 @@ exports.bookingResponse = async (req,res,next) => {
         })
         .catch(error => {
             console.log(error);
-            res.json({
+            return res.json({
                 success:false,
                 error:error
             });
+        });
+        const newNotification = new notificationModel({
+            name : req.user.name,
+            doerId:req.user._id,
+            actionId:selectedBooking._id,
+            receiverId:selectedBooking.touristId[0],
+            notificationText : `${req.user.name} has ${req.params.response} for your booking`
+        });
+        newNotification.save()
+        .then(savedNotification => {
+            req.app.locals.ioInstance.to(ioTouristConnections[selectedBooking.touristId[0]]).emit('new_notification_tourist',savedNotification);
+        })
+        .catch(e=>{
+            console.log(e)
         });
     }
     catch(e){
