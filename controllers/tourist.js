@@ -91,7 +91,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
         }
         const deals = await dealsModel.find({
             state:state,
-            endDate:{$gte:startDate},
+            startDate:{$gte:new Date().toJSON().slice(0,10)},
             peopleLeft:{$gte:noOfPeople}
         })
         .populate('guideId');
