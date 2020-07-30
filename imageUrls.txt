@@ -19,18 +19,21 @@ aws url for states:
 https://voilabucket2020.s3.ap-south-1.amazonaws.com/States/{state name here}.jpg
 
 aws url for andhra pradesh cities :
-https://voilabucket2020.s3.ap-south-1.amazonaws.com/andhra_pradesh/{city name here}.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/Andhra+Pradesh/{city name here}.jpg
 
 aws url for delhi cities :
-https://voilabucket2020.s3.ap-south-1.amazonaws.com/delhi/{city name here}.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/Delhi/{city name here}.jpg
 
 aws url for telangana cities :
-https://voilabucket2020.s3.ap-south-1.amazonaws.com/telangana/{city name here}.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/Telangana/{city name here}.jpg
 
 aws url for uttrakhand  cities:
-https://voilabucket2020.s3.ap-south-1.amazonaws.com/uttrakhand/{city name here}.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/Uttrakhand/{city name here}.jpg
 
 aws url for carousel images :
 https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Assam.jpg
 https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Goa.jpg
 https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Kashmir.jpg
+
+aws base url for assets :
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/Assets/{Asset}
