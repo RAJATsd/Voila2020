@@ -198,7 +198,7 @@ exports.getSelectGuide = async (req,res,next) => {
 exports.getDealAcceptance = async (req,res,next) => {
     try{
         const existingBooking = await bookingsModel.findOne({dealId:req.params.dealId});
-        const actionId = null;
+        let actionId = null;
         const deal = await dealsModel.findOne({_id:req.params.dealId});
         if(!existingBooking){
             const newBooking = new bookingsModel({
