@@ -39,6 +39,7 @@ const io = require('socket.io').listen(server);
 require('./socket/stream')(io);
 require('./socket/private')(io);
 require('./socket/room')(io);
+require('./socket/notifications').notificationIO(io);
     
 // var storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
@@ -68,6 +69,7 @@ const job = new cronJob('1 0 * * *', () => {
 
 job.start();
 
+app.locals['ioInstance'] = io;
 app.use(adminRoutes);
 app.use(authGuideRoutes);
 app.use(authTouristRoutes);

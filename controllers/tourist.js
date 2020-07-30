@@ -5,6 +5,8 @@ const Guide = require('../models/tourGuide');
 const messages = require('../models/messages');
 const Tourist = require('../models/tourist');
 const roomModel = require('../models/room');
+const ioGuideConnections = require('../socket/notifications').connectedGuides;
+const notificationModel = require('../models/notifications');
 
 exports.getCheck = async(req,res,next) => {
     try{
@@ -20,6 +22,7 @@ exports.getCheck = async(req,res,next) => {
             success:true,
             guides:guides
         })
+        console.log('oho bete ye to ho rha');
     }
     catch(e){
         console.log(e)
@@ -145,11 +148,27 @@ exports.getSelectGuide = async (req,res,next) => {
             .then(booking => {
                 booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
                 booking.save()
-                .then(savedBooking => res.status(200).json({
-                    success:true,
-                    message:"Booking created successfully",
-                    booking:savedBooking
-                }))
+                .then(savedBooking => {
+                    res.status(200).json({
+                        success:true,
+                        message:"Booking created successfully",
+                        booking:savedBooking
+                    });
+                    const newNotification = new notificationModel({
+                        name : req.user.name,
+                        doerId:req.user._id,
+                        actionId:savedBooking._id,
+                        receiverId:req.params.guideId,
+                        notificationText : `${req.user.name} has requested for a booking`
+                    });
+                    newNotification.save()
+                    .then(savedNotification => {
+                        req.app.locals.ioInstance.to(ioGuideConnections[req.params.guideId]).emit('new_notification_guide',savedNotification);
+                    })
+                    .catch(e=>{
+                        console.log(e)
+                    });
+                })
                 .catch(error => {
                     console.log(error)
                     res.json({
@@ -179,6 +198,7 @@ exports.getSelectGuide = async (req,res,next) => {
 exports.getDealAcceptance = async (req,res,next) => {
     try{
         const existingBooking = await bookingsModel.findOne({dealId:req.params.dealId});
+        const actionId = null;
         const deal = await dealsModel.findOne({_id:req.params.dealId});
         if(!existingBooking){
             const newBooking = new bookingsModel({
@@ -197,6 +217,7 @@ exports.getDealAcceptance = async (req,res,next) => {
             });
             newBooking.save()
             .then(async booking=>{
+                actionId = booking._id;
                 const touristId = req.user._id;
                 const room = await roomModel.findOne({dealId:req.params.dealId});
                 room.tourists = room.tourists.concat({touristId});
@@ -207,9 +228,10 @@ exports.getDealAcceptance = async (req,res,next) => {
                         message : "Booking created successfully", 
                         booking:booking
                     });
+
                 })
                 .catch(e=>{
-                    res.json({
+                    return res.json({
                         success:false,
                         error:e
                     });
@@ -217,30 +239,45 @@ exports.getDealAcceptance = async (req,res,next) => {
             })
             .catch(error => {
                 console.log(error);
-                res.json({
+                return res.json({
                     success:false,
                     error:error
                 })
             });
         }
         else{
+            actionId = existingBooking._id;
             existingBooking.touristId.push(req.user._id);
             existingBooking.save()
             .then(savedRes=>{
                 res.status(201).json({
                     success:true,
-                    message : "Booking created successfully", 
+                    message : "You were added to the existing booking", 
                     booking:savedRes
                 });
             })
             .catch(err=>{
                 console.log(err);
-                res.json({
+                return res.json({
                     success:false,
                     message:err
                 });
             })
         }
+        const newNotification = new notificationModel({
+            name : req.user.name,
+            doerId:req.user._id,
+            actionId,
+            receiverId:deal.guideId,
+            notificationText : `${req.user.name} has booked a deal with you`
+        });
+        newNotification.save()
+        .then(savedNotification => {
+            req.app.locals.ioInstance.to(ioGuideConnections[deal.guideId]).emit('new_notification_guide',savedNotification);
+        })
+        .catch(e=>{
+            console.log(e)
+        });
         deal.peopleLeft = deal.peopleLeft - req.body.noOfPeople;
         deal.save()
         .then(result => console.log('Deal Updated'))
@@ -363,6 +400,21 @@ exports.editRequest = async (req,res,next) => {
             success:true,
             message:"Booking updated successfully"
         });
+        const newNotification = new notificationModel({
+            name : req.user.name,
+            doerId:req.user._id,
+            actionId:bookingId,
+            receiverId:bookingChange.guideId,
+            notificationText : `${req.user.name} has ${change} a booking`
+        });
+        newNotification.save()
+        .then(savedNotification => {
+            req.app.locals.ioInstance.to(ioGuideConnections[bookingChange.guideId]).emit('new_notification_guide',savedNotification);
+        })
+        .catch(e=>{
+            console.log(e)
+        });
+
     }
     catch(e){
         console.log(e);
