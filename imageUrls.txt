@@ -29,3 +29,8 @@ https://voilabucket2020.s3.ap-south-1.amazonaws.com/telangana/{city name here}.j
 
 aws url for uttrakhand  cities:
 https://voilabucket2020.s3.ap-south-1.amazonaws.com/uttrakhand/{city name here}.jpg
+
+aws url for carousel images :
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Assam.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Goa.jpg
+https://voilabucket2020.s3.ap-south-1.amazonaws.com/carousel/Kashmir.jpg
