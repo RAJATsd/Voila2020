@@ -4,7 +4,7 @@ const guideModel = require('../models/tourGuide');
 exports.getAllPendingRequests = async (req,res,next) => {
     try{
         const guides = await guideModel.find({profileStatus:'PENDING'});
-        res.status(200).json({
+        res.json({
             success:true,
             message:"found these guides and answers",
             guides:guides
@@ -23,8 +23,8 @@ exports.decideGuide = async (req,res,next) => {
     try{
         guideModel.findOneAndUpdate({_id:req.params.guideId},{profileStatus:req.params.finalStatus})
         .then(updatedGuide => {
-            res.status(200).json({
-                success:false,
+            res.json({
+                success:true,
                 message:"guide successfully updated",
                 guide:updatedGuide
             });
