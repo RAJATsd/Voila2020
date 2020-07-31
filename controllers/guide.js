@@ -325,3 +325,29 @@ exports.fillAnswers = async(req,res,next) => {
         })
     }
 }
+
+exports.deleteDeal = async (req,res,next) => {
+    try{
+        dealModel.findByIdAndDelete({_id:req.params.dealId})
+        .then(response=>{
+            res.json({
+                success:true,
+                message:"Deleted the deal"
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+            res.json({
+                success:false,
+                message:"ERROR WHILE DELETING IN DB"
+            })
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message: " INTERNAL SERVER ERROR "
+        })
+    }
+}
