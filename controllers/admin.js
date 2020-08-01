@@ -3,7 +3,8 @@ const guideModel = require('../models/tourGuide');
 
 exports.getAllPendingRequests = async (req,res,next) => {
     try{
-        const guides = await guideModel.find({profileStatus:'PENDING'});
+        const status = req.params.status;
+        const guides = await guideModel.find({profileStatus:status});
         res.json({
             success:true,
             message:"found these guides and answers",

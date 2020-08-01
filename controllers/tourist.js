@@ -8,6 +8,7 @@ const roomModel = require('../models/room');
 const ioGuideConnections = require('../socket/notifications').connectedGuides;
 const notificationModel = require('../models/notifications');
 
+
 exports.getCheck = async(req,res,next) => {
     try{
         const guides = await guideModel.find({city:'Panipat'}).lean();
@@ -547,5 +548,17 @@ glbl.sort(function(a,b){
             success: false,
             error: e
         });
+    }
+}
+
+exports.reportProblemTourist = async(req,res,next) => {
+    try{
+        
+    }
+    catch(e){
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
     }
 }
