@@ -10,7 +10,11 @@ const reportSchema = new schema({
    reporterId:{
        type:schema.Types.ObjectId,
        required:true
-   }, 
+   },
+   userType : {
+       type:String,
+       required:true
+   }
 });
 
 module.exports = mongoose.model('report',reportSchema);

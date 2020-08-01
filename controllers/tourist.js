@@ -7,6 +7,7 @@ const Tourist = require('../models/tourist');
 const roomModel = require('../models/room');
 const ioGuideConnections = require('../socket/notifications').connectedGuides;
 const notificationModel = require('../models/notifications');
+const reporterSchema = require('../models/adminReports');
 
 
 exports.getCheck = async(req,res,next) => {
@@ -553,7 +554,24 @@ glbl.sort(function(a,b){
 
 exports.reportProblemTourist = async(req,res,next) => {
     try{
-        
+        const newReport = new reporterSchema({
+            name : req.user.name,
+            reporterId:req.user._id,
+            userType:'TOURIST'
+        });
+        newReport.save()
+        .then(savedReport=>{
+            res.json({
+                success:true,
+                message:"reported successfully"
+            });
+        })
+        .catch(err=>{
+            res.json({
+                success:false,
+                message:"INTERNAL SERVER ERROR"
+            })
+        }) 
     }
     catch(e){
         res.json({
