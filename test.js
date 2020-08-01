@@ -19,8 +19,6 @@
 //     console.log(err);
 // });
 
-const emptyArr = [1];
+let abc = 'abc mki this';
 
-if(!emptyArr.length){
-    console.log('yes')
-}
+console.log(abc.split(' ').join('+'));

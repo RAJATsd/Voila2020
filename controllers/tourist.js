@@ -7,6 +7,8 @@ const Tourist = require('../models/tourist');
 const roomModel = require('../models/room');
 const ioGuideConnections = require('../socket/notifications').connectedGuides;
 const notificationModel = require('../models/notifications');
+const reporterSchema = require('../models/adminReports');
+
 
 exports.getCheck = async(req,res,next) => {
     try{
@@ -91,7 +93,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
         }
         const deals = await dealsModel.find({
             state:state,
-            endDate:{$gte:startDate},
+            startDate:{$gte:new Date().toJSON().slice(0,10)},
             peopleLeft:{$gte:noOfPeople}
         })
         .populate('guideId');
@@ -197,91 +199,99 @@ exports.getSelectGuide = async (req,res,next) => {
 
 exports.getDealAcceptance = async (req,res,next) => {
     try{
-        const existingBooking = await bookingsModel.findOne({dealId:req.params.dealId});
-        const actionId = null;
+        let actionId = null;
         const deal = await dealsModel.findOne({_id:req.params.dealId});
-        if(!existingBooking){
-            const newBooking = new bookingsModel({
-                guideId : deal.guideId,
-                dealId : req.params.dealId,
-                touristId : [req.user._id],
-                price : deal.price,
-                places : deal.places,
-                startDate : deal.startDate,
-                groupType : deal.groupType,
-                endDate : deal.endDate,
-                status : 'APPROVED',
-                noOfPeople : req.body.noOfPeople,
-                duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
-                tourType : 'deal'
-            });
-            newBooking.save()
-            .then(async booking=>{
-                actionId = booking._id;
-                const touristId = req.user._id;
-                const room = await roomModel.findOne({dealId:req.params.dealId});
-                room.tourists = room.tourists.concat({touristId});
-                room.save()
-                .then(savedRoom => {
-                    res.status(201).json({
-                        success:true,
-                        message : "Booking created successfully", 
-                        booking:booking
-                    });
-
-                })
-                .catch(e=>{
-                    return res.json({
-                        success:false,
-                        error:e
-                    });
-                });
-            })
-            .catch(error => {
-                console.log(error);
-                return res.json({
-                    success:false,
-                    error:error
-                })
+        if(req.body.noOfPeople>deal.peopleLeft){
+            res.json({
+                success:false,
+                message:"Not enough slots available for booking"
             });
         }
         else{
-            actionId = existingBooking._id;
-            existingBooking.touristId.push(req.user._id);
-            existingBooking.save()
-            .then(savedRes=>{
-                res.status(201).json({
-                    success:true,
-                    message : "You were added to the existing booking", 
-                    booking:savedRes
+            const existingBooking = await bookingsModel.findOne({dealId:req.params.dealId});
+            if(!existingBooking){
+                const newBooking = new bookingsModel({
+                    guideId : deal.guideId,
+                    dealId : req.params.dealId,
+                    touristId : [req.user._id],
+                    price : deal.price,
+                    places : deal.places,
+                    startDate : deal.startDate,
+                    groupType : deal.groupType,
+                    endDate : deal.endDate,
+                    status : 'APPROVED',
+                    noOfPeople : req.body.noOfPeople,
+                    duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
+                    tourType : 'deal'
                 });
-            })
-            .catch(err=>{
-                console.log(err);
-                return res.json({
-                    success:false,
-                    message:err
+                newBooking.save()
+                .then(async booking=>{
+                    actionId = booking._id;
+                    const touristId = req.user._id;
+                    const room = await roomModel.findOne({dealId:req.params.dealId});
+                    room.tourists = room.tourists.concat({touristId});
+                    room.save()
+                    .then(savedRoom => {
+                        res.status(201).json({
+                            success:true,
+                            message : "Booking created successfully", 
+                            booking:booking
+                        });
+    
+                    })
+                    .catch(e=>{
+                        return res.json({
+                            success:false,
+                            error:e
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                    return res.json({
+                        success:false,
+                        error:error
+                    })
                 });
+            }
+            else{
+                actionId = existingBooking._id;
+                existingBooking.touristId.push(req.user._id);
+                existingBooking.save()
+                .then(savedRes=>{
+                    res.status(201).json({
+                        success:true,
+                        message : "You were added to the existing booking", 
+                        booking:savedRes
+                    });
+                })
+                .catch(err=>{
+                    console.log(err);
+                    return res.json({
+                        success:false,
+                        message:err
+                    });
+                })
+            }
+            const newNotification = new notificationModel({
+                name : req.user.name,
+                doerId:req.user._id,
+                actionId,
+                receiverId:deal.guideId,
+                notificationText : `${req.user.name} has booked a deal with you`
+            });
+            newNotification.save()
+            .then(savedNotification => {
+                req.app.locals.ioInstance.to(ioGuideConnections[deal.guideId]).emit('new_notification_guide',savedNotification);
             })
+            .catch(e=>{
+                console.log(e)
+            });
+            deal.peopleLeft = deal.peopleLeft - req.body.noOfPeople;
+            deal.save()
+            .then(result => console.log('Deal Updated'))
+            .catch(err=>console.log(err));
         }
-        const newNotification = new notificationModel({
-            name : req.user.name,
-            doerId:req.user._id,
-            actionId,
-            receiverId:deal.guideId,
-            notificationText : `${req.user.name} has booked a deal with you`
-        });
-        newNotification.save()
-        .then(savedNotification => {
-            req.app.locals.ioInstance.to(ioGuideConnections[deal.guideId]).emit('new_notification_guide',savedNotification);
-        })
-        .catch(e=>{
-            console.log(e)
-        });
-        deal.peopleLeft = deal.peopleLeft - req.body.noOfPeople;
-        deal.save()
-        .then(result => console.log('Deal Updated'))
-        .catch(err=>console.log(err));
     }
     catch(e){
         console.log(e);
@@ -539,5 +549,34 @@ glbl.sort(function(a,b){
             success: false,
             error: e
         });
+    }
+}
+
+exports.reportProblemTourist = async(req,res,next) => {
+    try{
+        const newReport = new reporterSchema({
+            name : req.user.name,
+            reporterId:req.user._id,
+            userType:'TOURIST'
+        });
+        newReport.save()
+        .then(savedReport=>{
+            res.json({
+                success:true,
+                message:"reported successfully"
+            });
+        })
+        .catch(err=>{
+            res.json({
+                success:false,
+                message:"INTERNAL SERVER ERROR"
+            })
+        }) 
+    }
+    catch(e){
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
     }
 }

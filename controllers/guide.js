@@ -9,6 +9,7 @@ const roomModel = require('../models/room');
 const s3Instance = require('../helpers/aws').s3;
 const ioTouristConnections = require('../socket/notifications').connectedTourists;
 const notificationModel = require('../models/notifications');
+const reporterSchema = require('../models/adminReports');
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -323,5 +324,60 @@ exports.fillAnswers = async(req,res,next) => {
             success:false,
             message:"INTERNAL SERVER ERROR"
         })
+    }
+}
+
+exports.deleteDeal = async (req,res,next) => {
+    try{
+        dealModel.findByIdAndDelete({_id:req.params.dealId})
+        .then(response=>{
+            res.json({
+                success:true,
+                message:"Deleted the deal"
+            });
+        })
+        .catch(err=>{
+            console.log(err);
+            res.json({
+                success:false,
+                message:"ERROR WHILE DELETING IN DB"
+            })
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message: " INTERNAL SERVER ERROR "
+        })
+    }
+}
+
+exports.reportProblemGuide = async(req,res,next) => {
+    try{
+        const newReport = new reporterSchema({
+            name : req.user.name,
+            reporterId:req.user._id,
+            userType:'GUIDE'
+        });
+        newReport.save()
+        .then(savedReport=>{
+            res.json({
+                success:true,
+                message:"reported successfully"
+            });
+        })
+        .catch(err=>{
+            res.json({
+                success:false,
+                message:"INTERNAL SERVER ERROR"
+            })
+        }); 
+    }
+    catch(e){
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        });
     }
 }
