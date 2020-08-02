@@ -8,7 +8,8 @@ const roomModel = require('../models/room');
 const ioGuideConnections = require('../socket/notifications').connectedGuides;
 const notificationModel = require('../models/notifications');
 const reporterSchema = require('../models/adminReports');
-
+const payment = require('../models/payment');
+const razorpayInstance = require('../helpers/razorpay');
 
 exports.getCheck = async(req,res,next) => {
     try{
@@ -582,4 +583,54 @@ exports.reportProblemTourist = async(req,res,next) => {
             message:"INTERNAL SERVER ERROR"
         })
     }
+}
+
+
+exports.makePayment = function(req,res,next){
+    console.log(req.body);
+     var options = {
+            amount: req.body.amount, // amount in the smallest currency unit
+            currency: req.body.currency,
+            receipt: req.body.userEmail,
+            payment_capture: '0'
+        };
+        console.log(options);
+    razorpayInstance.instance.orders.create(options, function (razor_error, order) {
+            if (razor_error) {
+                console.log("razor error ", razor_error)
+
+                res.status(417).json({
+                    message: razor_error.message,
+                    payload: null,
+                    error: "razor pay order creation unsuccessful"
+                });
+            } else {
+                const newPayment = new payment({
+                    dealId : req.params.dealId,
+                    touristId : req.params.touristId,
+                    amount : req.body.amount,
+                    email : req.body.userEmail,
+                    currency : req.body.currency
+                });
+                console.log(newPayment);
+                newPayment.save()
+                .then(paymentDetails =>{
+                    console.log(paymentDetails); 
+                    res.status(200).json({
+                    success : true,
+                    message: "order created successfully",
+                    error: null,
+                            paymentDetails:paymentDetails
+                        })  ;
+
+                }).catch(error => {
+                console.log(error);
+                res.json({
+                    success : false,
+                    error : error
+                });
+            });
+                }
+})
+
 }
