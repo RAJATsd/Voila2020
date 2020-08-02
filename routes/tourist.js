@@ -54,4 +54,6 @@ router.get('/tourist/messages/:id/',auth,touristController.showList);
 //gets list of tour guide chat with his/her tourists
 //requirements : guideId in params
 
+router.post('/tourist/makePayment/:dealId/:touristId',touristController.makePayment);
+
 module.exports = router;
