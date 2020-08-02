@@ -16,7 +16,11 @@ const blogSchema = new schema({
     author : {
     	type : schema.Types.ObjectId,
     	ref : 'tourGuide'
+    },
+    created : {
+        type: Date,
+        default: Date.now
     }
 });
 
-module.exports = mongoose.model('tourGuide',tourGuideSchema);
+module.exports = mongoose.model('blog',blogSchema);
