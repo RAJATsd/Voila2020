@@ -16,10 +16,10 @@ const reportSchema = new schema({
        required:true
    },
    latitude:{
-       type:Number
+       type:schema.Types.Decimal128
    },
    longitude:{
-       type:Number     
+       type:schema.Types.Decimal128     
    },
    status : {
        type:String,

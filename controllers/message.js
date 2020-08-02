@@ -223,10 +223,8 @@ exports.getAll = async(req,res,next) => {
 	const newRoom = await room.findById({
 		_id: req.params.roomId
 	});
-	
-	
 	res.status(200).json({message: "list has been retireved",newRoom: newRoom});
-}catch (e) {
+	}catch (e) {
         console.log(e);
         res.json({
             success: false,

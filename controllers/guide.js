@@ -10,6 +10,8 @@ const s3Instance = require('../helpers/aws').s3;
 const ioTouristConnections = require('../socket/notifications').connectedTourists;
 const notificationModel = require('../models/notifications');
 const reporterSchema = require('../models/adminReports');
+const axios = require('axios');
+geoLocationKey = process.env.GEO_REVERESE_GEO_KEY;
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -34,6 +36,14 @@ exports.addDeal = async (req,res,next) => {
             });
         }
         else{
+            const placeForVisit = req.body.places;
+            let placeCoordinates = [];
+            for(onePlace of placeForVisit){
+                let url = 'https://api.opencagedata.com/geocode/v1/json?q='+onePlace.place+','+req.body.state+'&key='+geoLocationKey;
+                console.log(url);
+                const fetchCoordinates = await axios.get(url);
+                placeCoordinates.push(fetchCoordinates.data.results[0].geometry);
+            }
             const newDeal = new dealModel({
                 places : req.body.places,
                 price : req.body.price,
@@ -42,10 +52,12 @@ exports.addDeal = async (req,res,next) => {
                 endDate : req.body.endDate,
                 city : req.body.city,
                 state:req.body.state,
+                placeCoordinates:placeCoordinates,
                 peopleLimit:req.body.peopleLimit,
                 groupType:req.body.groupType,
                 peopleLeft:req.body.peopleLimit
             });
+            
             newDeal.save()
             .then(deal => {
                 res.status(201).json({

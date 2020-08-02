@@ -18,6 +18,10 @@ const dealSchema = new schema({
         required:true,
         ref:'tourGuide'
     },
+    placeCoordinates:[{
+        lat:{type:schema.Types.Decimal128},
+        lng:{type:schema.Types.Decimal128}
+    }],
     favorites : [{
         type:schema.Types.ObjectId,
         ref:'tourist'

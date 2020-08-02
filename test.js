@@ -1,6 +1,6 @@
 // const testMOdel = require('./models/testing');
 // const mongoose = require('mongoose');
-// require('dotenv').config();
+ require('dotenv').config();
 // mongoose.connect(process.env.MONGO_URI,{useNewUrlParser:true})
 // .then(result=>{
 //     const ntest = [{interest:null},{interest:'mone'}];
@@ -18,7 +18,30 @@
 // .catch(err=>{
 //     console.log(err);
 // });
+const axios = require('axios');
+geoLocationKey = process.env.GEO_REVERESE_GEO_KEY;
 
-let abc = 'abc mki this';
+const data = [
+    {
+        name:"India Gate",
+        date:"12-12-53"
+    },
+    {
+        name:"Gateway Of India",
+        date:"12-12-53"    
+    },
+    {
+        name:"Marine Drive,Mumbai",
+        date:"12-12-53"
+    },
+    {
+        name:"Hotel,Taj",
+        date:"12-12-53"
+    }
+]
 
-console.log(abc.split(' ').join('+'));
+    let url = 'https://api.opencagedata.com/geocode/v1/json?q='+data[1].name+'&key='+geoLocationKey;
+    console.log(url);
+    axios.get(url)
+    .then(result=>console.log(result.data.results))
+    .catch(e=>console.log(e));
