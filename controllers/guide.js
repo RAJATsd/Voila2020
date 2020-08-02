@@ -10,6 +10,7 @@ const s3Instance = require('../helpers/aws').s3;
 const ioTouristConnections = require('../socket/notifications').connectedTourists;
 const notificationModel = require('../models/notifications');
 const reporterSchema = require('../models/adminReports');
+const blogSchema = require('../models/blog');
 
 let urlForPic=null;
 if(process.env.PORT){
@@ -270,10 +271,7 @@ exports.showList = async(req, res, next) => {
         }
         }
     }
-//           movies.sort(function(a, b) {
-//     var dateA = new Date(a.release), dateB = new Date(b.release);
-//     return dateA - dateB;
-// });
+
         glbl.sort(function(a,b){
             var dateA = new Date(a.created), dateB = new Date(b.created);
             return dateB - dateA ;
@@ -381,3 +379,54 @@ exports.reportProblemGuide = async(req,res,next) => {
         });
     }
 }
+
+exports.addBlog = async(req,res,next) => {
+    try{
+       // const profilePic = req.file;
+    
+        const paramsForS3 = {
+            Bucket:process.env.AWS_BUCKET_NAME,
+            Key : Date.now()+req.file.originalname,
+            Body:req.file.buffer
+        }
+        s3Instance.upload(paramsForS3,async(err,data)=>{
+         if(err){
+                console.log(e)
+                res.json({
+                    success:false,
+                    message:"SOMETHING WRONG WITH BUCKET"
+                });
+            }
+        else{
+                    
+        const newBlog = new blogSchema({
+            title : req.body.title,
+            content : req.body.content,
+            author : req.user._id,
+            picUrl : data.Location
+        });
+        newBlog.save()
+        .then(blog => {
+            res.json({
+                success : true,
+                message : "added successfully",
+                blog : blog
+            });
+        })
+    .catch(err => {
+        res.json({
+            success : false,
+            message : "INTERNAL SERVER ERROR"
+        })
+    })
+}
+ })  
+}
+catch(e){
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        });
+    }
+}
+
