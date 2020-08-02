@@ -25,6 +25,7 @@ else{
 
 exports.addDeal = async (req,res,next) => {
     try{
+        console.log('adding deal');
         const busyBookings = await bookingModel.find({
             guideId:req.user._id,
             startDate:{$lte:req.body.endDate},
