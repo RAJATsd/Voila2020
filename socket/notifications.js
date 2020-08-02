@@ -7,8 +7,10 @@ const notificationIO = function(io){
 			if(data.userType === 'GUIDE'){
 				socket.join('GUIDES');
 				connectedGuides[data._id]=socket.id;
+				console.log('Guide joining in room')
 			}
 			else{
+				console.log('Tourist joining in room');
 				socket.join('TOURISTS');
 				connectedTourists[data._id]=socket.id;
 			}

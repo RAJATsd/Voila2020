@@ -167,6 +167,7 @@ exports.getSelectGuide = async (req,res,next) => {
                     });
                     newNotification.save()
                     .then(savedNotification => {
+                        console.log(ioGuideConnections[req.params.guideId]);
                         req.app.locals.ioInstance.to(ioGuideConnections[req.params.guideId]).emit('new_notification_guide',savedNotification);
                     })
                     .catch(e=>{
