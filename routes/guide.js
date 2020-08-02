@@ -39,5 +39,6 @@ router.get('/getUserByEmail/:role/:email',commonController.getUserByEmail);
 router.get('/guide/messages/:id/',auth,guideController.showList);
 //gets list of tour guide chat with his/her tourists
 //requirements : guideId in params
+router.post('/guide/addBlog',auth,guideController.addBlog);
 
 module.exports = router;
