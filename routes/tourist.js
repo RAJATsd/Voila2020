@@ -17,6 +17,7 @@ router.post('/tourist/guides/deals/:dealId',auth,touristController.getDealAccept
 //for choosing a deal
 //requirements : _id of deal as param, everything in the bookings model except guideId, touristId,price,rating,review,reviewDate and status
 router.post('/tourist/updateInterestAndLang',auth,touristController.postInsertInterestAndLanguage);
+router.post('/tourist/report',auth,touristController.reportProblemTourist);
 
 router.get('/randomDeals',touristController.getRandomDeals);
 router.get('/testing',touristController.getCheck);
@@ -35,7 +36,6 @@ router.get('/tourist/favoriteDeals',auth,touristController.myFavorites);
 router.get('/tourist/deals/guide/:guideId',touristController.specificGuideDeals);
 //sends the deals of a specific guide
 //requirements : guide id of the specific guide
-router.get('/tourist/report',auth,touristController.reportProblemTourist)
 
 router.put('/tourist/profile/update/:USER',auth,commonController.editProfile);
 //edits any changes in the profile

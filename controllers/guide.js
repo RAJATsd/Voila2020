@@ -356,6 +356,8 @@ exports.reportProblemGuide = async(req,res,next) => {
         const newReport = new reporterSchema({
             name : req.user.name,
             reporterId:req.user._id,
+            latitude:req.body.latitude,
+            longitude:req.body.longitude,
             userType:'GUIDE'
         });
         newReport.save()
