@@ -23,4 +23,4 @@ const blogSchema = new schema({
     }
 });
 
-module.exports = mongoose.model('tourGuide',tourGuideSchema);
+module.exports = mongoose.model('blog',blogSchema);
