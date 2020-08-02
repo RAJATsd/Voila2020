@@ -589,7 +589,7 @@ exports.reportProblemTourist = async(req,res,next) => {
 exports.makePayment = function(req,res,next){
     console.log(req.body);
      var options = {
-            amount: req.body.amount, // amount in the smallest currency unit
+            amount: req.body.amount * 100, // amount in the smallest currency unit
             currency: req.body.currency,
             receipt: req.body.userEmail,
             payment_capture: '0'
