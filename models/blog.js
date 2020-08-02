@@ -16,6 +16,10 @@ const blogSchema = new schema({
     author : {
     	type : schema.Types.ObjectId,
     	ref : 'tourGuide'
+    },
+    created : {
+        type: Date,
+        default: Date.now
     }
 });
 
