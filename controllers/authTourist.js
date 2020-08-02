@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 exports.postSignup = (req,res,next) => {
     try{
         const phoneNumber = req.body.phoneNumber;
+        console.log(req.body);
         Tourist.findOne({$or:
             [
                 {phoneNumber:phoneNumber},

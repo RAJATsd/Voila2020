@@ -55,6 +55,7 @@ exports.getRandomDeals = async(req,res,next) => {
 
 exports.getGuidesBySearch = async (req,res,next) => {
     try{
+        console.log(req.body);
         const state = req.body.state;
         const startDate = req.body.startDate;
         const endDate = req.body.endDate;

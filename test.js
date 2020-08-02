@@ -39,8 +39,9 @@ const data = [
         date:"12-12-53"
     }
 ]
+const places = 'Gateway Of India, Marine Drive';
 
-    let url = 'https://api.opencagedata.com/geocode/v1/json?q='+data[1].name+'&key='+geoLocationKey;
+    let url = 'https://api.opencagedata.com/geocode/v1/json?q='+places+'&key='+geoLocationKey;
     console.log(url);
     axios.get(url)
     .then(result=>console.log(result.data.results))
