@@ -1,5 +1,6 @@
 const answerModel = require('../models/answers');
 const guideModel = require('../models/tourGuide');
+const reportModel = require('../models/adminReports');
 
 exports.getAllPendingRequests = async (req,res,next) => {
     try{
@@ -45,6 +46,24 @@ exports.decideGuide = async (req,res,next) => {
             success:false,
             message:"INTERNAL SERVER ERROR"
         });
+    }
+}
+
+exports.getAllReports = async (req,res,next) => {
+    try{
+        const allReports = await reportModel.find({status:'UNRESOLVED'});
+        res.json({
+            success:true,
+            message:"Here are all the reports",
+            reports:allReports
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
     }
 }
 

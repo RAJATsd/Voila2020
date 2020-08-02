@@ -14,6 +14,16 @@ const reportSchema = new schema({
    userType : {
        type:String,
        required:true
+   },
+   latitude:{
+       type:Number
+   },
+   longitude:{
+       type:Number     
+   },
+   status : {
+       type:String,
+       default:'UNRESOLVED'
    }
 });
 

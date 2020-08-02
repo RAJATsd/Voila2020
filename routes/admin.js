@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get('/admin/Guides/:status',auth,adminControllers.getAllPendingRequests);
 router.get('/admin/decision/:guideId/:finalStatus',auth,adminControllers.decideGuide);
+router.get('/admin/allReports',auth,adminControllers.getAllReports);
 
 module.exports = router;

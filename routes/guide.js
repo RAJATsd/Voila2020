@@ -10,6 +10,7 @@ router.post('/guide/deals/add',auth,guideController.addDeal);
 //adds deal for the guide
 //requirements: all the fields in the deals schema except guideId and favorites
 router.post('/guide/fillAnswers',auth,guideController.fillAnswers)
+router.post('/guide/report',auth,guideController.reportProblemGuide);
 
 router.get('/guide/deals',auth,guideController.showDeal);
 //lists all the deals of the particular guide
@@ -24,7 +25,6 @@ router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
 router.get('/guide/deleteDeal/:dealId',auth,guideController.deleteDeal);
-router.get('/guide/report',auth,guideController.reportProblemGuide);
 
 
 router.put('/guide/profile/update/:USER',auth,uploadConfig,guideController.editProfile);
