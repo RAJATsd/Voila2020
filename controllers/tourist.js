@@ -125,7 +125,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
 exports.specificBookingDetails = async(req,res,next) => {
     try{
         const bookingId = req.params.bookingId;
-        const booking = await bookingsModel.findOne({_id:bookingId});
+        const booking = await bookingsModel.findOne({_id:bookingId}).populate('guideId');
         res.json({
             success:true,
             booking:booking
