@@ -122,7 +122,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
     }
 }
 
-exports.searchGuidesAndDealForAndroid = (req,res,next) => {
+exports.searchGuidesAndDealForAndroid = async(req,res,next) => {
     try{
         const guides = await guideModel.find({
             state:state,
