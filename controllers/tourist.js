@@ -122,6 +122,31 @@ exports.getGuidesBySearch = async (req,res,next) => {
     }
 }
 
+exports.searchGuidesAndDealForAndroid = (req,res,next) => {
+    try{
+        const guides = await guideModel.find({
+            state:state,
+            profileStatus:'APPROVED'
+        }).lean();
+        const deals = await dealsModel.find({
+            state:state,
+            startDate:{$gte:new Date().toJSON().slice(0,10)},
+            peopleLeft:{$gte:noOfPeople}
+        }).populate('guideId');
+        res.json({
+            success:true,
+            guides:guides,
+            deals:deals
+        });
+    }
+    catch(e){
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
+    }
+}
+
 exports.getSelectGuide = async (req,res,next) => {
     try{
         const busyBookings = await bookingsModel.find({
