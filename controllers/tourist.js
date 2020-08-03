@@ -124,6 +124,7 @@ exports.getGuidesBySearch = async (req,res,next) => {
 
 exports.searchGuidesAndDealForAndroid = async(req,res,next) => {
     try{
+        console.log(req.body);
         const guides = await guideModel.find({
             state:req.body.state,
             profileStatus:'APPROVED'
@@ -140,6 +141,7 @@ exports.searchGuidesAndDealForAndroid = async(req,res,next) => {
         });
     }
     catch(e){
+        console.log(e);
         res.json({
             success:false,
             message:"INTERNAL SERVER ERROR"
