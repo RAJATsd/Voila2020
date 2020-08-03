@@ -25,6 +25,7 @@ router.get('/guide/myProfile',auth,commonController.myProfile);
 //sends the profile of the guide 
 //requirements : nothing
 router.get('/guide/deleteDeal/:dealId',auth,guideController.deleteDeal);
+router.get('/guide/bookingInfo/:bookingId',auth,guideController.specificBookingDetails);
 
 
 router.put('/guide/profile/update/:USER',auth,uploadConfig,guideController.editProfile);

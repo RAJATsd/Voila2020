@@ -37,6 +37,7 @@ router.get('/tourist/favoriteDeals',auth,touristController.myFavorites);
 router.get('/tourist/deals/guide/:guideId',touristController.specificGuideDeals);
 //sends the deals of a specific guide
 //requirements : guide id of the specific guide
+router.get('/tourist/bookingInfo/:bookingId',auth,touristController.specificBookingDetails)
 
 
 router.put('/tourist/profile/update/:USER',auth,commonController.editProfile);

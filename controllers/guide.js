@@ -105,6 +105,24 @@ exports.showDeal = async (req,res,next) => {
     }
 }
 
+exports.specificBookingDetails = async(req,res,next) => {
+    try{
+        const bookingId = req.params.bookingId;
+        const booking = await bookingModel.findOne({_id:bookingId});
+        res.json({
+            success:true,
+            booking:booking
+        });
+    }
+    catch(e){
+        console.log(e);
+        res.json({
+            success:false,
+            message:"INTERNAL SERVER ERROR"
+        })
+    }
+}
+
 exports.showOffers = async (req,res,next) => {
     try{
         const status = req.params.status;
