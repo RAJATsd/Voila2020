@@ -130,7 +130,7 @@ exports.searchGuidesAndDealForAndroid = async(req,res,next) => {
             profileStatus:'APPROVED'
         }).lean();
         const deals = await dealsModel.find({
-            state:state,
+            state:req.body.state,
             startDate:{$gte:new Date().toJSON().slice(0,10)},
             peopleLeft:{$gte:req.body.noOfPeople}
         }).populate('guideId');
