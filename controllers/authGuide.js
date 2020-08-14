@@ -11,151 +11,69 @@ else{
     urlForPic='localhost:3000/profileImages/';
 }
 
-exports.testingAWS = async (req,res,next) => {
-    try{
-        
-          
-        console.log('kya ye pehele hua h kya');
-    }
-    catch(e){
-        console.log(e);
-        res.json({e});
-    }
+const uploadToS3 = (bucketParams) => {
+    return new Promise((resolve,reject)=>{
+        s3Instance.upload(bucketParams,(err,data)=>{
+            if(err){
+                reject(err)
+            }
+            else{
+                resolve(data);        
+            }
+        });
+    });
 }
 
-exports.postSignup = (req,res,next) => {
+exports.postSignup = async(req,res,next) => {
     try{
         const userData = JSON.parse(req.body.data);
         const phoneNumber = userData.phoneNumber;
         const profilePic = req.file;
-        // if(!profilePic)
-        // {
-        //     return res.json({
-        //         message:"no file uploaded"
-        //     });
-        // }
-        Guide.findOne({phoneNumber:phoneNumber})
-        .then(result => {
-            if(result)
-            {
-                res.json({
-                    success:false,
-                    message:"Guide Already Exist. Please login"
-                });
-            }
-            else{
-                let picUrl = null;
-                const password = userData.password;
-                bcrypt.hash(password,8)
-                .then(hashed=>{
-                    if(profilePic){
-                        //picUrl = urlForPic+profilePic.filename;
-                        const paramsForS3 = {
-                            Bucket:process.env.AWS_BUCKET_NAME,
-                            Key : Date.now()+req.file.originalname,
-                            Body:req.file.buffer
-                        }
-                        s3Instance.upload(paramsForS3,async(err,data)=>{
-                            if(err){
-                                console.log(e)
-                                res.json({
-                                    success:false,
-                                    message:"SOMETHING WRONG WITH BUCKET"
-                                });
-                            }
-                            else{
-                                picUrl = data.Location;
-                                const newGuide = new Guide({
-                                    name : userData.name,
-                                    gender : userData.gender, 
-                                    password : hashed,
-                                    dob : userData.dob,
-                                    phoneNumber : phoneNumber,
-                                    email : userData.email,
-                                    address : userData.address,
-                                    experience : userData.experience,
-                                    peopleLimit : userData.peopleLimit,
-                                    perHeadCharge : userData.perHeadCharge,
-                                    perDayCharge : userData.perDayCharge,
-                                    picUrl : picUrl,
-                                    aadhaarNumber : userData.aadhaarNumber,
-                                    interests : userData.interests,
-                                    languages : userData.languages,
-                                    city : userData.city,
-                                    state : userData.state
-                                });    
-                                newGuide.save()
-                                .then(result =>{
-                                    res.status(201).json({
-                                        success:true,
-                                        message:"New Guide Registered Successfully",
-                                        data : result
-                                    });
-                                })
-                                .catch(err=>{
-                                    console.log(err);
-                                    res.json({
-                                        success:false,
-                                        message:"INTERNAL SERVER ERROR"
-                                    })
-                                });        
-                            }
-                        });
-                    }
-                    else{
-                        const newGuide = new Guide({
-                            name : userData.name,
-                            gender : userData.gender, 
-                            password : hashed,
-                            dob : userData.dob,
-                            phoneNumber : phoneNumber,
-                            email : userData.email,
-                            address : userData.address,
-                            experience : userData.experience,
-                            peopleLimit : userData.peopleLimit,
-                            perHeadCharge : userData.perHeadCharge,
-                            perDayCharge : userData.perDayCharge,
-                            picUrl : picUrl,
-                            aadhaarNumber : userData.aadhaarNumber,
-                            interests : userData.interests,
-                            languages : userData.languages,
-                            city : userData.city,
-                            state : userData.state
-                        });    
-                        newGuide.save()
-                        .then(result =>{
-                            res.status(201).json({
-                                success:true,
-                                message:"New Guide Registered Successfully",
-                                data : result
-                            });
-                        })
-                        .catch(err=>{
-                            console.log(err);
-                            res.json({
-                                success:false,
-                                message:"INTERNAL SERVER ERROR"
-                            })
-                        });
-                    }
-                })
-                .catch(err=>{
-                    console.log(err)
-                    res.json({
-                        success:false,
-                        message:'INTERNAL SERVER ERROR'
-                    });
-                });
-            }
-        })
-        .catch(err=>{
-            console.log(err);
+        const singleGuide = await Guide.findOne({phoneNumber:phoneNumber});
+        if(singleGuide)
+        {
             res.json({
                 success:false,
-                message:'INTERNAL SERVER ERROR'
+                message:"Guide Already Exist. Please login"
             });
+            return;
+        }
+        let picUrl = null;
+        const password = userData.password;
+        const hashed = await bcrypt.hash(password,8);
+        if(profilePic){
+            const paramsForS3 = {
+                Bucket:process.env.AWS_BUCKET_NAME,
+                Key : Date.now()+req.file.originalname,
+                Body:req.file.buffer
+            }
+            picUrl = await uploadToS3(paramsForS3).Location;
+        }
+        const newGuide = new Guide({
+            name : userData.name,
+            gender : userData.gender, 
+            password : hashed,
+            dob : userData.dob,
+            phoneNumber : phoneNumber,
+            email : userData.email,
+            address : userData.address,
+            experience : userData.experience,
+            peopleLimit : userData.peopleLimit,
+            perHeadCharge : userData.perHeadCharge,
+            perDayCharge : userData.perDayCharge,
+            picUrl : picUrl,
+            aadhaarNumber : userData.aadhaarNumber,
+            interests : userData.interests,
+            languages : userData.languages,
+            city : userData.city,
+            state : userData.state
+        });    
+        const savedGuide = await newGuide.save();
+        res.status(201).json({
+            success:true,
+            message:"New Guide Registered Successfully",
+            data : savedGuide
         });
-    
     }
     catch(e){
         console.log(e);

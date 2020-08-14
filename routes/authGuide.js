@@ -5,8 +5,6 @@ const uploadConfig = require('../middleware/fileUpload');
 
 const router = express.Router();
 
-router.post('/testingAwsS3',uploadConfig,guideController.testingAWS);
-
 router.post('/signup/guide',uploadConfig,guideController.postSignup);
 //signing up guide
 //requirements : everything in body which is in tourGuide model except picUrl,tokens,occupied and profileStatus

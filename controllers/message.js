@@ -157,6 +157,7 @@ exports.SendMessage = (req,res,next) => {
 	})
 	
 }
+
 exports.MarkReceiverMessages = async(req,res,next) => {
 		// console.log("Here",req.params);	
 		const {sender,receiver} = req.params;
@@ -192,7 +193,7 @@ exports.MarkReceiverMessages = async(req,res,next) => {
 			}
 		}
 
-	}
+}
 
 exports.createRoom = (req,res,next) => {
 	

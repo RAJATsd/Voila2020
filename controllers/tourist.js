@@ -195,7 +195,7 @@ exports.getSelectGuide = async (req,res,next) => {
             });
             newBooking.save()
             .then(booking => {
-                booking.duration = (booking.endDate.getTime()-booking.startDate.getTime())/86400000,
+                booking.duration = ((booking.endDate.getTime()-booking.startDate.getTime())/86400000)+1,
                 booking.save()
                 .then(savedBooking => {
                     res.status(200).json({
@@ -269,7 +269,7 @@ exports.getDealAcceptance = async (req,res,next) => {
                     endDate : deal.endDate,
                     status : 'APPROVED',
                     noOfPeople : req.body.noOfPeople,
-                    duration : (deal.endDate.getTime()-deal.startDate.getTime())/86400000,
+                    duration : ((deal.endDate.getTime()-deal.startDate.getTime())/86400000)+1,
                     tourType : 'deal'
                 });
                 newBooking.save()
