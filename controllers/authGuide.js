@@ -47,7 +47,9 @@ exports.postSignup = async(req,res,next) => {
                 Key : Date.now()+req.file.originalname,
                 Body:req.file.buffer
             }
-            picUrl = await uploadToS3(paramsForS3).Location;
+            const uploadedPicInfo = await uploadToS3(paramsForS3);
+            console.log(uploadedPicInfo);
+            picUrl = uploadedPicInfo.Location;
         }
         const newGuide = new Guide({
             name : userData.name,
